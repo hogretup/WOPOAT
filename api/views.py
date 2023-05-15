@@ -31,3 +31,14 @@ def updateQuizHistory(request):
 
     serializer = CompletedQuizSerializer(cq, many=False)
     return Response(serializer.data)
+
+
+# path: api/quiz/recent
+@api_view(['GET'])
+def getRecentQuizzes(request):
+    """
+    Returns the last 10 completed quizzes in database
+    """
+    last_ten = CompletedQuiz.objects.all().order_by('-created')[:10]
+    serializer = CompletedQuizSerializer(last_ten, many=True)
+    return Response(serializer.data)
