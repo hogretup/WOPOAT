@@ -13,29 +13,31 @@ For each difficulty level, we check for certain filters
 to determine complexity of the expression, and keep
 generating until a suitable one is found.
 
-Example output: (JSON)
+Example output: (Dict)
 {
-   "statement": "Expand the following expression",
-   "qn": [
-      {
-         "qn": "x(x+y)",
-         "options": [
-            "x",
-            "y",
-            "x+y",
-            "x^2+xy"
-         ]
-      }
-      {
-         "qn": "p(q+1)",
-         "options": [
-            "p",
-            "q",
-            "p+q",
-            "p*q+p"
-         ]
-      }
-   ]
+  "statement": "Expand the following expression",
+  "qns": [
+    {
+      "qn": "b \\left(r - 1\\right)",
+      "options": [
+        "b r - b",
+        "b r - b",
+        "b r - 2 b",
+        "b r - 3 b"
+      ],
+      "correct_index": 0
+    },
+    {
+      "qn": "- 6 m \\left(g - 1\\right)",
+      "options": [
+        "- 4 g m + 4 m",
+        "- 8 g m + 8 m",
+        "- 7 g m + 7 m",
+        "- 6 g m + 6 m"
+      ],
+      "correct": 3
+    }
+  ]
 }
 """
 
@@ -44,7 +46,7 @@ def generate_expandquiz(difficulty, n):
     """
     Generates a random "Expand" quiz with n questions,
     with 4 options per qn, each qn as a LaTeX string 
-    (with escaped backslashes) and returned in JSON format
+    (with escaped backslashes) and returned as a dict
     """
     qns = []
     for i in range(n):
@@ -100,28 +102,13 @@ def generate_expandquiz(difficulty, n):
     d["statement"] = statement
     d["qns"] = []
     for qn in qns:
-        options = random_options(expand(qn), 3)
+        options, correct = random_options(expand(qn), 3)
         options = [latex(expr) for expr in options]
-        d["qns"].append({"qn": latex(qn), "options": options})
-    return json.dumps(d)
+        d["qns"].append(
+            {"qn": latex(qn), "options": options, "correct": correct})
+    return d
 
 # ---------------- Utility functions ----------------
-
-
-def json_quiz(statement, qns):
-    """
-    Given question statement,  list of qns, generates a quiz 
-    with 4 options per qn, converts all SymPy expressions to latex
-    and returns the quiz in JSON format.
-    """
-    d = {}
-    d["statement"] = statement
-    d["qns"] = []
-    for qn in qns:
-        options = random_options(qn, 3)
-        options = [latex(expr) for expr in options]
-        d["qns"].append({"qn": latex(qn), "options": options})
-    return json.dumps(d, indent=2)
 
 
 def generate_random_symbols(n):
@@ -173,8 +160,8 @@ def random_options(expr, n):
     by randomly changing the constants in expr by +-r.
     Radius of difference r may be tweaked.
 
-    Returns: An array of (n+1) SymPy options, with the correct
-    option in a random position
+    Returns: An array of (n+1) SymPy options, and the index
+    of the correct option
     """
     r = 2
     while True:
@@ -199,7 +186,7 @@ def random_options(expr, n):
 
     options.append(expr)
     random.shuffle(options)
-    return options
+    return options, options.index(expr)
 
 
 def get_degree(expr):

@@ -6,9 +6,11 @@ from rest_framework.response import Response
 # the serialization of Model data into Python data.
 
 from rest_framework.decorators import api_view
+from . import scripts
 
 
 # path: api/generateQuiz/<str:topic>/<int:difficulty>
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
-    return Response({"topic": topic, "difficulty": difficulty})
+    # Currently just generates an Expand quiz with 3 qns
+    return Response(scripts.generate_expandquiz(difficulty, 3))
