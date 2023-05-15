@@ -25,7 +25,7 @@ Example output: (Dict)
         "b r - 2 b",
         "b r - 3 b"
       ],
-      "correct_index": 0
+      "correct": 0
     },
     {
       "qn": "- 6 m \\left(g - 1\\right)",
