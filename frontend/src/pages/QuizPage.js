@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MathComponent } from "mathjax-react";
+<<<<<<< HEAD
+=======
 // import { xContentTypeOptions } from "helmet"; // ???
+>>>>>>> e9403a5c44e5e0d7bf232c92aa327edd4ac31526
 
 function QuizPage() {
   const location = useLocation();
