@@ -14,9 +14,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# comment
-# comment 2
-# comment 3
 
 from django.contrib import admin
 from django.urls import path, include  # Add the include method
@@ -30,5 +27,3 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'))
 ]
 
-# Test commit 3
-# Test commit 4
