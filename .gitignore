@@ -1,11 +1,11 @@
 # VSCode
 .vscode
 
-# pycache
-__pycache__
+# __pycache__
+__pycache__/
 
 # build
-__build__
+build/
 
 # Logs
 logs
