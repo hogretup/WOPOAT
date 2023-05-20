@@ -4,6 +4,9 @@
 # pycache
 __pycache__
 
+# build
+__build__
+
 # Logs
 logs
 *.log
