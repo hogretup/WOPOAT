@@ -12,6 +12,8 @@ This app aims to create a convenient way for students & tutors to make quizzes f
 
 ## Walkthrough of set up
 
+Clone this repository onto your computer.
+
 ### **1. Setting up Python virtual environment**
 
 Virtual environments are self-contained directories that contains a specific ver. of Python and its own set of installed packages (so your different projects' dependency versions dont conflict with each other) First install `virtualenvwrapper` (useful extension to make working with venv easy):
