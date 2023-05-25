@@ -6,8 +6,6 @@ This app aims to create a convenient way for students & tutors to make quizzes f
 
 *Sympy is responsible for question generation logic
 
-*Django the web framework used to provide a python based environment for sympy to run in
-
 *React is responsible for handling the front end 
 
 ## Walkthrough of set up
@@ -21,7 +19,7 @@ Virtual environments are self-contained directories that contains a specific ver
 ```
 pip install virtualenvwrapper-win (for windows) / pip install virtualenvwrapper
 mkvirtualenv project_name
-pip install
+pip install requirements.txt
 ```
 
 As you are automatically inside the new virtual env (or you can use workon "project_name" to double confirm), download the relevant dependencies by doing pip install requirements.txt from the root folder.
@@ -34,7 +32,7 @@ Now we will download the relevant dependencies to compile the React component
 
 ```
 cd frontend
-npm install package.json
+npm install
 npm run build
 ```
 
