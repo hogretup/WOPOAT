@@ -43,7 +43,7 @@ npm run builds will create the relevant build directory with the production buil
 Now that everything is prepared, run this command within the root folder (ie exit the frontend folder if you are still inside)
 
 ```
-python manage.py run server
+python manage.py runserver
 ```
 
 Quizzicalc should now be hosted on your local host
