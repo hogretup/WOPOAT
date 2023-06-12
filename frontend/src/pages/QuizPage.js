@@ -49,7 +49,7 @@ function QuizPage() {
         maxscore: maxscore,
       }),
     });
-    navigate("/");
+    navigate("/home");
   };
 
   return (
