@@ -1,8 +1,8 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
-import LoginPage from "./pages/LoginPage"
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   let topics = ["Expand", "Factorise", "Fractions"];
