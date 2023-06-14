@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Quiz from "../components/Quiz";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MathComponent } from "mathjax-react";
 
