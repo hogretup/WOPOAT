@@ -1,6 +1,4 @@
-import "./App.css";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-<<<<<<< HEAD
 import { Outlet } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
@@ -8,11 +6,6 @@ import LoginPage from "./pages/LoginPage";
 
 // Components
 import Navbar from "./components/Navbar";
-=======
-import HomePage from "./pages/HomePage";
-import QuizPage from "./pages/QuizPage";
-import LoginPage from "./pages/LoginPage";
->>>>>>> main
 
 function App() {
   return (
