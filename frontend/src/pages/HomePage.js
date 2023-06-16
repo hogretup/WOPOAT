@@ -39,6 +39,7 @@ function HomePage() {
 
     if (topic === "" || difficulty === "") return;
 
+    // Fetch quiz data from API then routes to quiz page
     let response = await fetch(`/api/generateQuiz/${topic}/${difficulty}`);
     let quiz = await response.json();
     navigate("/quiz", {
