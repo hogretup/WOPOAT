@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
-  FormControl,
   InputLabel,
   MenuItem,
   Select,
@@ -11,6 +10,7 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  Paper,
 } from "@mui/material";
 
 function HomePage() {
@@ -72,67 +72,59 @@ function HomePage() {
     };
 
     fetchRecentQuizzes();
-    console.log(quizHistory);
-    console.log(typeof quizHistory);
   }, []);
-
-  console.log("Hello");
-  console.log(quizHistory);
-  console.log(typeof quizHistory);
 
   // -----------------------------------------------
 
   return (
     <Container maxWidth="md">
-      <AppBar
-        position="static"
-        style={{ marginTop: "2rem", marginBottom: "2rem" }}
+      <Paper
+        elevation={3}
+        style={{ marginTop: "2rem", marginBottom: "2rem", padding: 8 }}
       >
-        <Toolbar>
-          <Typography variant="h6">Quizzicalc</Typography>
-        </Toolbar>
-      </AppBar>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6}>
-            <InputLabel id="topic-label">Topic</InputLabel>
-            <Select
-              labelId="topic-label"
-              id="topic"
-              value={topic}
-              onChange={handleTopicChange}
-              fullWidth
-            >
-              {topics.map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </Select>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={6}>
+              <InputLabel id="topic-label">Topic</InputLabel>
+              <Select
+                labelId="topic-label"
+                id="topic"
+                value={topic}
+                onChange={handleTopicChange}
+                fullWidth
+              >
+                {topics.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputLabel id="difficulty-label">Difficulty</InputLabel>
+              <Select
+                labelId="difficulty-label"
+                id="difficulty"
+                value={difficulty}
+                onChange={handleDifficultyChange}
+                fullWidth
+              >
+                {difficulties.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} container justifyContent="flex-end">
+              <Button variant="contained" color="primary" type="submit">
+                Generate quiz!
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <InputLabel id="difficulty-label">Difficulty</InputLabel>
-            <Select
-              labelId="difficulty-label"
-              id="difficulty"
-              value={difficulty}
-              onChange={handleDifficultyChange}
-              fullWidth
-            >
-              {difficulties.map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={12} container justifyContent="flex-end">
-            <Button variant="contained" color="primary" type="submit">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Paper>
+
       <br></br>
       <div>
         <h3> Recent Quizzes </h3>
