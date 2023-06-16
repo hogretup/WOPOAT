@@ -20,18 +20,9 @@ import {
 } from "@mui/material";
 
 function HomePage() {
-  // Selected data values (not neccessarily submitted yet)
+  // Selected data values
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("");
-
-  // Effect Hook:
-  // Runs the function on the first render
-  // And any time any dependency value changes
-  /*
-  useEffect(() => {
-    getQuiz();
-  }, [topic, difficulty]);
-  */
 
   const handleTopicChange = (event) => {
     setTopic(event.target.value);
@@ -42,23 +33,14 @@ function HomePage() {
   };
 
   const navigate = useNavigate();
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Neccessary?
 
-    // Is an Effect Hook neccessary??
-
-    if (topic === "" || difficulty === "") return;
-
-    getQuizAndRoute();
-  };
-
-  let getQuizAndRoute = async () => {
     if (topic === "" || difficulty === "") return;
 
     let response = await fetch(`/api/generateQuiz/${topic}/${difficulty}`);
     let quiz = await response.json();
-    await navigate("/quiz", {
+    navigate("/quiz", {
       state: { quiz: quiz, topic: topic, difficulty: difficulty },
     }); // Passes the props to QuizPage.js
   };
@@ -69,7 +51,14 @@ function HomePage() {
   // Retrieving history
   const [quizHistory, setquizHistory] = useState([]);
 
-  // UseEffect neccessary to perform after render
+  // Effect Hook:
+  // Runs the function on the first render
+  // And any time any dependency value changes
+  /*
+  useEffect(() => {
+    getQuiz();
+  }, [topic, difficulty]);
+  */
   useEffect(() => {
     const fetchRecentQuizzes = async () => {
       const response = await fetch(`/api/quiz/recent`);
@@ -79,8 +68,6 @@ function HomePage() {
 
     fetchRecentQuizzes();
   }, []);
-
-  // -----------------------------------------------
 
   return (
     <Container maxWidth="md">
