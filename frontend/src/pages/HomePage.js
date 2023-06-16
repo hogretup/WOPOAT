@@ -11,6 +11,12 @@ import {
   Toolbar,
   Typography,
   Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 
 function HomePage() {
@@ -125,30 +131,35 @@ function HomePage() {
         </form>
       </Paper>
 
-      <br></br>
-      <div>
-        <h3> Recent Quizzes </h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Topic</th>
-              <th>Difficulty</th>
-              <th>Score</th>
-              <th>Date/Time (UTC)</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Topic</TableCell>
+              <TableCell align="right">Difficulty</TableCell>
+              <TableCell align="right">Score</TableCell>
+              <TableCell align="right">Date/Time (UTC)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {quizHistory.map((item, index) => (
-              <tr key={index}>
-                <td>{item.topic}</td>
-                <td>{item.difficulty}</td>
-                <td>{item.score + "/" + item.maxscore}</td>
-                <td>{item.created}</td>
-              </tr>
+              <TableRow
+                key={index}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {item.topic}
+                </TableCell>
+                <TableCell align="right">{item.difficulty}</TableCell>
+                <TableCell align="right">
+                  {item.score + "/" + item.maxscore}
+                </TableCell>
+                <TableCell align="right">{item.created}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }
