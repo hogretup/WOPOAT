@@ -32,9 +32,10 @@ function HomePage() {
     setDifficulty(event.target.value);
   };
 
+  // Handling form submission
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Neccessary?
+    event.preventDefault(); // Prevents default behaviour of form submission event
 
     if (topic === "" || difficulty === "") return;
 
@@ -45,20 +46,18 @@ function HomePage() {
     }); // Passes the props to QuizPage.js
   };
 
+  // Form values
   const topics = ["Expand", "Factorise"];
   const difficulties = [1, 2, 3];
 
-  // Retrieving history
+  // Retrieving quiz history
   const [quizHistory, setquizHistory] = useState([]);
 
   // Effect Hook:
   // Runs the function on the first render
-  // And any time any dependency value changes
-  /*
-  useEffect(() => {
-    getQuiz();
-  }, [topic, difficulty]);
-  */
+  // And any time any dependency value changes (second argument)
+  // In this case second argument is [] so effect is executed
+  // only on the first render
   useEffect(() => {
     const fetchRecentQuizzes = async () => {
       const response = await fetch(`/api/quiz/recent`);
@@ -118,7 +117,7 @@ function HomePage() {
         </form>
       </Paper>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mb: "2rem" }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
