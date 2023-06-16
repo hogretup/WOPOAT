@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import SumIcon from "@mui/icons-material/Functions";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["About"];
 const settings = ["Profile", "Logout"];
@@ -24,10 +25,20 @@ function NavBar() {
     setAnchorEl(null);
   };
 
+  const navigate = useNavigate();
+  const handleHomeButton = () => {
+    navigate("/home");
+  };
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton size="large" edge="start" color="inherit" aria-label="logo">
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="logo"
+          onClick={handleHomeButton}
+        >
           <SumIcon />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             QUIZZICALC
