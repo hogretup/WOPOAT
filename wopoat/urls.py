@@ -22,6 +22,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('login/', include('login.urls')),
 
     # Let React handle all the routing here
     path('', TemplateView.as_view(template_name='index.html'))

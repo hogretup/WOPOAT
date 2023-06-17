@@ -3,9 +3,11 @@ import { Outlet } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignupPage";
 
 // Components
 import Navbar from "./components/Navbar";
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<LoginPage />}></Route>
+          <Route path="/signup" element={<SignUpPage />}></Route>
           <Route
             element={
               <>
