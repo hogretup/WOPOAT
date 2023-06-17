@@ -18,66 +18,9 @@ import {
 import { styled } from "@mui/system";
 
 function QuizPage() {
-  /*
-  const StyledToggleButton = styled(ToggleButton)(
-    ({ theme, submitted, correct }) => ({
-      backgroundColor: submitted
-        ? correct
-          ? theme.palette.success
-          : theme.palette.error
-        : theme.palette.primary,
-      "&:hover": {
-        backgroundColor: submitted
-          ? correct
-            ? theme.palette.success
-            : theme.palette.error
-          : theme.palette.primary,
-      },
-      "&.MuiToggleButton-root.Mui-selected": {
-        backgroundColor: correct ? theme.palette.success : theme.palette.error,
-        "&:hover": {
-          backgroundColor: correct
-            ? theme.palette.success
-            : theme.palette.error,
-        },
-      },
-    })
-  );*/
-
   // Getting props
-
   const location = useLocation();
-  const { quiz, topic, difficulty } = location.state;
-
-  /*
-
-  const quiz = {
-    statement: "Expand the following expression",
-    qns: [
-      {
-        qn: "b \\left(r - 1\\right)",
-        options: ["b r - b", "b r - b", "b r - 2 b", "b r - 3 b"],
-        correct: 0,
-      },
-      {
-        qn: "- 6 m \\left(g - 1\\right)",
-        options: [
-          "- 4 g m + 4 m",
-          "- 8 g m + 8 m",
-          "- 7 g m + 7 m",
-          "- 6 g m + 6 m",
-        ],
-        correct: 3,
-      },
-      {
-        qn: "b \\left(r - 1\\right)",
-        options: ["b r - b", "b r - b", "b r - 2 b", "b r - 3 b"],
-        correct: 0,
-      },
-    ],
-  };
-  const topic = "Expand";
-  const difficulty = 1;*/
+  let { quiz, topic, difficulty } = location.state;
 
   // Quiz submission variables
   const [selectedOptions, setSelectedOptions] = useState({}); // dict, e.g. { qnIndex: selectedOption }
@@ -91,8 +34,14 @@ function QuizPage() {
       ...prevSelectedOptions,
       [questionIndex]: parseInt(event.target.value), // event.target.value = option chosen
     }));
+  };
 
-    console.log(selectedOptions);
+  // Handler
+  const handleToggleQn = (event, newActiveQn) => {
+    // if no change detected, newActiveQn is null
+    if (newActiveQn !== null) {
+      setActiveQn(newActiveQn);
+    }
   };
 
   // Handler
@@ -115,10 +64,7 @@ function QuizPage() {
     addToHistory(score, quiz.qns.length);
   };
 
-  const handleSetActiveQn = (event, index) => {
-    setActiveQn(index);
-  };
-
+  // Adds completed quiz to quiz history
   const addToHistory = async (score, maxscore) => {
     await fetch(`/api/quiz/updateHistory`, {
       method: "POST",
@@ -141,7 +87,7 @@ function QuizPage() {
           <ToggleButtonGroup
             value={activeQn}
             exclusive
-            onChange={handleSetActiveQn}
+            onChange={handleToggleQn}
           >
             {[...Array(quiz.qns.length).keys()].map((index) => (
               <ToggleButton value={index}>
@@ -219,49 +165,6 @@ function QuizPage() {
       </Stack>
     </Container>
   );
-
-  /*
-  return (
-    <div>
-      <h1>
-        {topic} (Level {difficulty})
-      </h1>
-      <form onSubmit={handleSubmit}>
-        {questions.map((question, index) => (
-          <div key={index}>
-            <h4>
-              {index + 1}. {quiz.statement}
-            </h4>
-            <MathComponent
-              tex={question.qn}
-              display={false}
-              style={{ marginBottom: "2rem" }}
-            />
-            <br></br>
-            {question.options.map((option, optionIndex) => (
-              <div key={optionIndex}>
-                <input
-                  type="radio"
-                  id={`option_${index}_${optionIndex}`}
-                  name={`quizOption_${index}`}
-                  value={optionIndex}
-                  checked={selectedOptions[index] === optionIndex}
-                  onChange={(event) => {
-                    handleOptionChange(event, index);
-                  }}
-                />
-                <label htmlFor={`option_${index}_${optionIndex}`}>
-                  <MathComponent tex={option} display={false} />
-                </label>
-              </div>
-            ))}
-            <br></br>
-          </div>
-        ))}
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );*/
 }
 
 export default QuizPage;
