@@ -15,6 +15,7 @@ from .serializers import CompletedQuizSerializer
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
     # Currently just generates an Expand quiz with 3 qns
+    print(request.user)
     return Response(scripts.generate_expandquiz(difficulty, 3))
 
 
