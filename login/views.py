@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,7 +15,6 @@ import json
 
 @api_view(['POST'])
 def signup(request):
-    # Currently just generates an Expand quiz with 3 qns
     data = json.loads(request.body)
     username = data['username']
     password = data['password']
@@ -42,3 +41,9 @@ def signin(request):
     except User.DoesNotExist:
         response_data = {'exists': 'Invalid username'}
         return HttpResponse(response_data)
+
+
+@api_view(['GET'])
+def signout(request):
+    logout(request)
+    return HttpResponse(status=200)

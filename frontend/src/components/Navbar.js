@@ -29,9 +29,23 @@ function NavBar() {
   const handleAboutButton = () => {
     navigate("/about");
   };
+  const handleProfileButton = () => {
+    handleCloseUserMenu();
+  };
+  const handleLogoutButton = () => {
+    handleCloseUserMenu();
+    callLogout();
+  };
+  const callLogout = async () => {
+    await fetch("/login/logout");
+    navigate("/");
+  };
 
   const pages = [{ name: "About", handler: handleAboutButton }];
-  const settings = ["Profile", "Logout"];
+  const settings = [
+    { name: "Profile", handler: handleProfileButton },
+    { name: "Logout", handler: handleLogoutButton },
+  ];
 
   return (
     <AppBar position="static">
@@ -72,8 +86,8 @@ function NavBar() {
             onClose={handleCloseUserMenu}
           >
             {settings.map((item) => (
-              <MenuItem key={item} onClick={handleCloseUserMenu}>
-                {item}
+              <MenuItem key={item.name} onClick={item.handler}>
+                {item.name}
               </MenuItem>
             ))}
           </Menu>
