@@ -4,10 +4,10 @@ import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignupPage";
+import AboutPage from "./pages/AboutPage";
 
 // Components
 import Navbar from "./components/Navbar";
-
 
 function App() {
   return (
@@ -26,6 +26,7 @@ function App() {
           >
             <Route path="/quiz" element={<QuizPage />}></Route>
             <Route path="/home" element={<HomePage />}></Route>
+            <Route path="/about" element={<AboutPage />}></Route>
           </Route>
         </Routes>
       </div>

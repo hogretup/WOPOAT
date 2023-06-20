@@ -11,9 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 import SumIcon from "@mui/icons-material/Functions";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["About"];
-const settings = ["Profile", "Logout"];
-
 function NavBar() {
   // Can consider making basic Menu button a component
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,6 +26,13 @@ function NavBar() {
   const handleHomeButton = () => {
     navigate("/home");
   };
+  const handleAboutButton = () => {
+    navigate("/about");
+  };
+
+  const pages = [{ name: "About", handler: handleAboutButton }];
+  const settings = ["Profile", "Logout"];
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -36,7 +40,6 @@ function NavBar() {
           size="large"
           edge="start"
           color="inherit"
-          aria-label="logo"
           onClick={handleHomeButton}
         >
           <SumIcon />
@@ -51,15 +54,12 @@ function NavBar() {
           justifyContent="flex-end"
         >
           {pages.map((page) => (
-            <Button key={page} color="inherit">
-              {page}
+            <Button key={page.name} color="inherit" onClick={page.handler}>
+              {page.name}
             </Button>
           ))}
           <IconButton
             id="profile-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
@@ -70,9 +70,6 @@ function NavBar() {
             anchorEl={anchorEl}
             open={open}
             onClose={handleCloseUserMenu}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
           >
             {settings.map((item) => (
               <MenuItem key={item} onClick={handleCloseUserMenu}>
