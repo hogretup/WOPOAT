@@ -28,7 +28,17 @@ def signin(request):
     data = json.loads(request.body)
     username = data['username']
     password = data['password']
-    try:
+
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return Response("success")
+    else:
+        return Response("invalid")
+
+
+'''    try:
         user = User.objects.get(username=username)
         print("the user is: " + str(user))
         if user.check_password(password):
@@ -41,6 +51,7 @@ def signin(request):
     except User.DoesNotExist:
         response_data = {'exists': 'Invalid username'}
         return HttpResponse(response_data)
+'''
 
 
 @api_view(['GET'])

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
@@ -20,38 +20,34 @@ function LoginPage() {
 
     const data = {
       username: username,
-      password: password
+      password: password,
     };
-    
+
     try {
-      const response = await fetch('/login/signin', {
-        method: 'POST',
+      const response = await fetch("/login/signin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
-      
+
       const responseData = await response.json();
-      if (responseData.exists == 'Valid user') { 
-        navigate('/home');
+      if (responseData == "success") {
+        navigate("/home");
       } else {
-        if (responseData.exists == 'Invalid password') {
-          setErrorMessage('Password is invalid');
-        } else {
-          setErrorMessage('Username does not exist')
-        }
+        setErrorMessage("Username or password is incorrect");
       }
     } catch (error) {
       // Handle error
-      setErrorMessage('An error occurred');
+      setErrorMessage("An error occurred");
     }
   };
 
   const goToSignupPage = () => {
     // Add your sign up logic here
-    console.log('Sign up button clicked');
-    navigate('/signup');
+    console.log("Sign up button clicked");
+    navigate("/signup");
   };
 
   return (
@@ -82,7 +78,7 @@ function LoginPage() {
       {errorMessage && <p>{errorMessage}</p>}
 
       <p>
-        Don't have an account?{' '}
+        Don't have an account?{" "}
         <button onClick={goToSignupPage}>Click here to sign up</button>.
       </p>
     </div>
