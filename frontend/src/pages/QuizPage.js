@@ -17,6 +17,8 @@ import {
 
 import { styled } from "@mui/system";
 
+import Confetti from "../components/Confetti";
+
 function QuizPage() {
   // Getting props
   const location = useLocation();
@@ -26,6 +28,7 @@ function QuizPage() {
   const [selectedOptions, setSelectedOptions] = useState({}); // dict, e.g. { qnIndex: selectedOption }
   const [activeQn, setActiveQn] = useState(0); // int, denotes current active qn
   const [submitted, setSubmitted] = useState(false); // boolean, denotes whether submit button has been clicked
+  const [confettiVisible, setConfettiVisible] = useState(false);
 
   // Handler
   const handleOptionChange = (event, questionIndex) => {
@@ -52,6 +55,7 @@ function QuizPage() {
   // Handler
   const handleSubmit = (event) => {
     setSubmitted(true);
+    setConfettiVisible(true);
 
     let score = 0;
     for (let i = 0; i < quiz.qns.length; ++i) {
@@ -161,6 +165,7 @@ function QuizPage() {
           >
             Submit
           </Button>
+          {confettiVisible && <Confetti />}
         </Box>
       </Stack>
     </Container>
