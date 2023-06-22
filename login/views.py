@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
+# path: login/signup
 @api_view(['POST'])
 def signup(request):
     data = json.loads(request.body)
@@ -23,6 +24,7 @@ def signup(request):
     return JsonResponse({'message': 'User created successfully!'})
 
 
+# path: login/signin
 @api_view(['POST'])
 def signin(request):
     data = json.loads(request.body)
@@ -38,23 +40,17 @@ def signin(request):
         return Response("invalid")
 
 
-'''    try:
-        user = User.objects.get(username=username)
-        print("the user is: " + str(user))
-        if user.check_password(password):
-            response_data = {'exists': 'Valid user'}
-            login(request, user)
-            return JsonResponse(response_data)
-        else:
-            response_data = {'exists': 'Invalid password'}
-            return HttpResponse(response_data)
-    except User.DoesNotExist:
-        response_data = {'exists': 'Invalid username'}
-        return HttpResponse(response_data)
-'''
-
-
+# path: login/signout
 @api_view(['GET'])
 def signout(request):
     logout(request)
     return HttpResponse(status=200)
+
+
+# path: login/currentUser
+@api_view(['GET'])
+def currentUser(request):
+    user = request.user
+    return Response({
+        'username': user.username,
+    })

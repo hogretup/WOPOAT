@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -41,6 +41,19 @@ function NavBar() {
     navigate("/");
   };
 
+  // Get username data
+  const [username, setUsername] = React.useState("");
+  useEffect(() => {
+    const getCurrentUsername = async () => {
+      let response = await fetch("/login/currentUser");
+      let data = await response.json();
+      console.log(data);
+      setUsername(data.username);
+    };
+
+    getCurrentUsername();
+  }, []);
+
   const pages = [{ name: "About", handler: handleAboutButton }];
   const settings = [
     { name: "Profile", handler: handleProfileButton },
@@ -77,6 +90,7 @@ function NavBar() {
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
+            <Typography variant="h6">{username}</Typography>
             <ProfileIcon fontSize="large" />
           </IconButton>
           <Menu
