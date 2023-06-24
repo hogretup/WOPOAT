@@ -47,7 +47,6 @@ function NavBar() {
     const getCurrentUsername = async () => {
       let response = await fetch("/login/currentUser");
       let data = await response.json();
-      console.log(data);
       setUsername(data.username);
     };
 

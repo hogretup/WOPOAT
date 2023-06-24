@@ -53,4 +53,5 @@ def currentUser(request):
     user = request.user
     return Response({
         'username': user.username,
+        'is_authenticated': request.user.is_authenticated
     })

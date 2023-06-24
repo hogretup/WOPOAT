@@ -33,6 +33,8 @@ function LoginPage() {
       });
 
       const responseData = await response.json();
+      console.log("HELLO");
+      await console.log(responseData);
       if (responseData == "success") {
         navigate("/home");
       } else {
