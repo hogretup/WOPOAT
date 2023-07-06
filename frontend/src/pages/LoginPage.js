@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
@@ -33,7 +33,6 @@ function LoginPage() {
       });
 
       const responseData = await response.json();
-      console.log("HELLO");
       await console.log(responseData);
       if (responseData == "success") {
         navigate("/home");
