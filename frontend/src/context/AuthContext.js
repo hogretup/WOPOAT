@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
       : null
   );
 
+  let [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
   // Also returns whether authentication was successful
@@ -35,8 +37,8 @@ export const AuthProvider = ({ children }) => {
         password: password,
       }),
     });
-
     let data = await response.json();
+
     if (response.status === 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
@@ -53,11 +55,44 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("authTokens");
   };
 
+  let updateToken = async () => {
+    console.log("updateToken called");
+    let response = await fetch("/login/token/refresh", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        refresh: authTokens.refresh,
+      }),
+    });
+    let data = await response.json();
+
+    if (response.status === 200) {
+      setAuthTokens(data);
+      setUser(jwt_decode(data.access));
+      localStorage.setItem("authTokens", JSON.stringify(data));
+    } else {
+      logoutUser();
+    }
+  };
+
   let contextData = {
     user: user,
     loginUser: loginUser,
     logoutUser: logoutUser,
   };
+
+  // Refresh the access token every 2s
+  useEffect(() => {
+    let fourMinutes = 1000 * 60 * 4;
+    let interval = setInterval(() => {
+      if (authTokens) {
+        updateToken();
+      }
+    }, fourMinutes);
+    return () => clearInterval(interval);
+  }, [authTokens, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
