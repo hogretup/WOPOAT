@@ -38,13 +38,14 @@ function NavBar() {
     handleCloseUserMenu();
     callLogout();
   };
+
+  let { user, logoutUser } = useContext(AuthContext);
+
   const callLogout = async () => {
+    logoutUser();
     await fetch("/login/logout");
     navigate("/");
   };
-
-  // Get user data
-  let { user } = useContext(AuthContext);
 
   const pages = [{ name: "About", handler: handleAboutButton }];
   const settings = [

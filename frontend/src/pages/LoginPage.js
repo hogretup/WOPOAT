@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
@@ -8,7 +8,14 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
-  let { loginUser } = useContext(AuthContext);
+  let { user, loginUser } = useContext(AuthContext);
+
+  // If user is already logged in, redirect to homepage
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
