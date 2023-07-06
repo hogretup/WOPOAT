@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -10,6 +10,8 @@ import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import SumIcon from "@mui/icons-material/Functions";
 import { useNavigate } from "react-router-dom";
+
+import AuthContext from "../context/AuthContext";
 
 function NavBar() {
   // Can consider making basic Menu button a component
@@ -41,17 +43,8 @@ function NavBar() {
     navigate("/");
   };
 
-  // Get username data
-  const [username, setUsername] = React.useState("");
-  useEffect(() => {
-    const getCurrentUsername = async () => {
-      let response = await fetch("/login/currentUser");
-      let data = await response.json();
-      setUsername(data.username);
-    };
-
-    getCurrentUsername();
-  }, []);
+  // Get user data
+  let { user } = useContext(AuthContext);
 
   const pages = [{ name: "About", handler: handleAboutButton }];
   const settings = [
@@ -89,7 +82,7 @@ function NavBar() {
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
-            <Typography variant="h6">{username}</Typography>
+            <Typography variant="h6">{user && user.username}</Typography>
             <ProfileIcon fontSize="large" />
           </IconButton>
           <Menu

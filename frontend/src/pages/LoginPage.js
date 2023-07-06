@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
+  let { loginUser } = useContext(AuthContext);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -18,30 +21,12 @@ function LoginPage() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const data = {
-      username: username,
-      password: password,
-    };
-
-    try {
-      const response = await fetch("/login/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const responseData = await response.json();
-      await console.log(responseData);
-      if (responseData == "success") {
-        navigate("/home");
-      } else {
-        setErrorMessage("Username or password is incorrect");
-      }
-    } catch (error) {
-      // Handle error
-      setErrorMessage("An error occurred");
+    // Returns true or false, for successful/unsuccessful authentication
+    let authSucceeded = await loginUser(username, password);
+    if (authSucceeded) {
+      navigate("/home");
+    } else {
+      setErrorMessage("Username or password is incorrect");
     }
   };
 
