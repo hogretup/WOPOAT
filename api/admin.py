@@ -12,6 +12,7 @@ class CompletedQuizAdmin(admin.ModelAdmin):
         'maxscore',
         'created'
     ]
+    # test
 
 
 admin.site.register(CompletedQuiz, CompletedQuizAdmin)
