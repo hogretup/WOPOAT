@@ -1,7 +1,6 @@
 # Contains SymPy scripts
 
 from sympy import *
-import json
 import string
 import random
 
