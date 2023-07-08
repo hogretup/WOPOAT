@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import AuthContext from "../context/AuthContext";
 
 function HomePage() {
   // Selected data values
@@ -51,6 +52,9 @@ function HomePage() {
   // Retrieving quiz history
   const [quizHistory, setquizHistory] = useState([]);
 
+  // User context
+  let { authTokens, logoutUser } = useContext(AuthContext);
+
   // Effect Hook:
   // Runs the function on the first render
   // And any time any dependency value changes (second argument)
@@ -58,9 +62,22 @@ function HomePage() {
   // only on the first render
   useEffect(() => {
     const fetchRecentQuizzes = async () => {
-      const response = await fetch(`/api/quiz/recent`);
+      const response = await fetch(`/api/quiz/recent`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      });
+
       const data = await response.json();
-      setquizHistory(data);
+
+      // Not sure when response would fail
+      if (response.status === 200) {
+        setquizHistory(data);
+      } else if (response.statusText === "Unauthorized") {
+        logoutUser();
+      }
     };
 
     fetchRecentQuizzes();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MathComponent } from "mathjax-react";
 
@@ -14,8 +14,8 @@ import {
   Radio,
   Button,
 } from "@mui/material";
-
 import { styled } from "@mui/system";
+import AuthContext from "../context/AuthContext";
 
 function QuizPage() {
   // Getting props
@@ -64,12 +64,16 @@ function QuizPage() {
     addToHistory(score, quiz.qns.length);
   };
 
+  // User context
+  let { authTokens } = useContext(AuthContext);
+
   // Adds completed quiz to quiz history
   const addToHistory = async (score, maxscore) => {
     await fetch(`/api/quiz/updateHistory`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
       },
       body: JSON.stringify({
         topic: topic,

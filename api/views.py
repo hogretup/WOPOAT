@@ -5,7 +5,9 @@ from rest_framework.response import Response
 # Note that this "serialization" is distinct from
 # the serialization of Model data into Python data.
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from . import scripts
 from .models import CompletedQuiz
 from .serializers import CompletedQuizSerializer
@@ -15,15 +17,17 @@ from .serializers import CompletedQuizSerializer
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
     # Currently just generates an Expand quiz with 3 qns
-    print(request.user)
     return Response(scripts.generate_expandquiz(difficulty, 3))
 
 
 # path: api/quiz/updateHistory
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def updateQuizHistory(request):
+    this_user = request.user
     data = request.data
     cq = CompletedQuiz.objects.create(
+        user=this_user,
         topic=data['topic'],
         difficulty=data['difficulty'],
         score=data['score'],
@@ -36,10 +40,14 @@ def updateQuizHistory(request):
 
 # path: api/quiz/recent
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getRecentQuizzes(request):
     """
-    Returns the last 10 completed quizzes in database
+    Returns the users' last 10 completed quizzes in database
     """
-    last_ten = CompletedQuiz.objects.all().order_by('-created')[:10]
+    user = request.user
+    # "completedquiz_set" is an attribute of user, returns list of all the users' completedquizzes (Python descriptors)
+    last_ten = user.completedquiz_set.all().order_by('-created')[:10]
+    # last_ten = CompletedQuiz.objects.all().order_by('-created')[:10]
     serializer = CompletedQuizSerializer(last_ten, many=True)
     return Response(serializer.data)

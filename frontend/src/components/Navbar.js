@@ -43,7 +43,6 @@ function NavBar() {
 
   const callLogout = async () => {
     logoutUser();
-    await fetch("/login/logout");
     navigate("/");
   };
 
