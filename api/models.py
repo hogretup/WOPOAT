@@ -1,7 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class CompletedQuiz(models.Model):
+    # ForeignKey: for many-to-one relationship
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     topic = models.TextField(null=True, blank=True)
     difficulty = models.IntegerField(null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)

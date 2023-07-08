@@ -27,4 +27,3 @@ urlpatterns = [
     # Let React handle all the routing here
     path('', TemplateView.as_view(template_name='index.html'))
 ]
-

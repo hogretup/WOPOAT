@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
+  let { user, loginUser } = useContext(AuthContext);
+
+  // If user is already logged in, redirect to homepage
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -18,40 +28,19 @@ function LoginPage() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const data = {
-      username: username,
-      password: password
-    };
-    
-    try {
-      const response = await fetch('/login/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      
-      const responseData = await response.json();
-      if (responseData.exists == 'Valid user') { 
-        navigate('/home');
-      } else {
-        if (responseData.exists == 'Invalid password') {
-          setErrorMessage('Password is invalid');
-        } else {
-          setErrorMessage('Username does not exist')
-        }
-      }
-    } catch (error) {
-      // Handle error
-      setErrorMessage('An error occurred');
+    // Returns true or false, for successful/unsuccessful authentication
+    let authSucceeded = await loginUser(username, password);
+    if (authSucceeded) {
+      navigate("/home");
+    } else {
+      setErrorMessage("Username or password is incorrect");
     }
   };
 
   const goToSignupPage = () => {
     // Add your sign up logic here
-    console.log('Sign up button clicked');
-    navigate('/signup');
+    console.log("Sign up button clicked");
+    navigate("/signup");
   };
 
   return (
@@ -82,7 +71,7 @@ function LoginPage() {
       {errorMessage && <p>{errorMessage}</p>}
 
       <p>
-        Don't have an account?{' '}
+        Don't have an account?{" "}
         <button onClick={goToSignupPage}>Click here to sign up</button>.
       </p>
     </div>

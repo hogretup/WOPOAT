@@ -6,39 +6,38 @@ from rest_framework.response import Response
 # the serialization of Model data into Python data.
 
 from rest_framework.decorators import api_view
-from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse, HttpResponse
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
+# path: login/token/
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+
+        return token
+
+
+# path: login/token/refresh/
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+# path: login/signup
 @api_view(['POST'])
 def signup(request):
-    # Currently just generates an Expand quiz with 3 qns
     data = json.loads(request.body)
     username = data['username']
     password = data['password']
-    myuser = User.objects.create_user(username = username, password = password)
+    myuser = User.objects.create_user(username=username, password=password)
     myuser.save()
     return JsonResponse({'message': 'User created successfully!'})
-
-@api_view(['POST'])
-def signin(request):
-    data = json.loads(request.body)
-    username = data['username']
-    password = data['password']
-    print(data['username'])
-    print(data['password'])
-    try:
-        user = User.objects.get(username=username)
-        print("the user is: " + str(user))
-        if user.check_password(password):
-            response_data = {'exists': 'Valid user'}
-            return JsonResponse(response_data)
-        else:
-            response_data = {'exists': 'Invalid password'}
-            return HttpResponse(response_data)
-    except User.DoesNotExist:
-        response_data = {'exists': 'Invalid username'}
-        return HttpResponse(response_data)
-
