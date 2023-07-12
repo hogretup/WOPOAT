@@ -43,44 +43,50 @@ Example output: (Dict)
 
 def generate_quiz_from_seed(seed):
     """
-    Given a quiz seed, returns the generated quiz
+    Given a quiz seed, returns the generated quiz.
+    If seed is invalid, throws an error
     """
-    concatenated_preorders, topic, difficulty, num_qns = serialization.decode_seed_to_preorders(
-        seed)
+    try:
+        concatenated_preorders, topic, difficulty, num_qns = serialization.decode_seed_to_preorders(
+            seed)
 
-    if difficulty == 1:
-        preorder_length = len(serialization.HEIGHT_TWO_STRUCT)
-    else:
-        preorder_length = len(serialization.HEIGHT_THREE_STRUCT)
+        if difficulty == 1:
+            preorder_length = len(serialization.HEIGHT_TWO_STRUCT)
+        else:
+            preorder_length = len(serialization.HEIGHT_THREE_STRUCT)
 
-    qns = []
-    ptr = 0
-    for i in range(0, num_qns):
-        expr = parse_preorder_to_expression(
-            concatenated_preorders[ptr:ptr+preorder_length])
-        if topic == "e":
-            qns.append(expr)
-        elif topic == "f":
-            qns.append(expand(expr))
-        ptr += preorder_length
+        qns = []
+        ptr = 0
+        for i in range(0, num_qns):
+            expr = parse_preorder_to_expression(
+                concatenated_preorders[ptr:ptr+preorder_length])
+            if topic == "e":
+                qns.append(expr)
+            elif topic == "f":
+                qns.append(expand(expr))
+            ptr += preorder_length
 
-    # Generating options and JSON output
-    statement = ''
-    if topic == "Expand":
-        statement = "Expand the following expression"
-    elif topic == "Factorise":
-        statement = "Factorise the following expression"
-    d = {}
-    d["statement"] = statement
-    d["seed"] = seed
-    d["qns"] = []
-    for qn in qns:
-        options, correct = random_options(
-            expand(qn) if topic == "e" else factor(qn), 3)
-        options = [latex(expr) for expr in options]
-        d["qns"].append(
-            {"qn": latex(qn), "options": options, "correct": correct})
-    return d
+        # Generating options and JSON output
+        statement = ''
+        if topic == "Expand":
+            statement = "Expand the following expression"
+        elif topic == "Factorise":
+            statement = "Factorise the following expression"
+        d = {}
+        d["statement"] = statement
+        d["seed"] = seed
+        d["topic"] = "Expand" if topic == 'e' else "Factorise"
+        d["difficulty"] = difficulty
+        d["qns"] = []
+        for qn in qns:
+            options, correct = random_options(
+                expand(qn) if topic == "e" else factor(qn), 3)
+            options = [latex(expr) for expr in options]
+            d["qns"].append(
+                {"qn": latex(qn), "options": options, "correct": correct})
+        return d
+    except Exception as e:
+        raise Exception("Something went wrong! Exception: " + str(e))
 
 
 def generate_quiz(topic, difficulty, n):
@@ -159,6 +165,8 @@ def generate_quiz(topic, difficulty, n):
     d = {}
     d["statement"] = statement
     d["seed"] = seed
+    d["topic"] = topic
+    d["difficulty"] = difficulty
     d["qns"] = []
     for qn in qns:
         options, correct = random_options(
