@@ -140,7 +140,7 @@ def generate_quiz(topic, difficulty, n):
             """
             while True:
                 redo = False
-                expr, preorder = random_expression(4, 3)
+                expr, preorder = random_expression(3, 3)
                 if expand(expr) == expr:
                     redo = True
                 if get_degree(expr) > 3:

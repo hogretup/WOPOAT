@@ -49,7 +49,7 @@ function HomePage() {
     // Reset the copied state after a certain duration
     setTimeout(() => {
       setCopied(false);
-    }, 3000);
+    }, 1000);
   };
 
   // Handling form submission
