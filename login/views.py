@@ -14,7 +14,6 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-
 # path: login/token/
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
