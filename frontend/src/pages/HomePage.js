@@ -14,13 +14,19 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  IconButton,
+  TextField,
+  Typography,
 } from "@mui/material";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import AuthContext from "../context/AuthContext";
 
 function HomePage() {
   // Selected data values
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [inputSeed, setInputSeed] = useState("");
+  const [wrongSeed, setWrongSeed] = useState(false);
 
   const handleTopicChange = (event) => {
     setTopic(event.target.value);
@@ -28,6 +34,22 @@ function HomePage() {
 
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
+  };
+
+  const handleInputSeedChange = (event) => {
+    setInputSeed(event.target.value);
+  };
+
+  // Handling "Copied!" message after copying seed to clipboard
+  const [copied, setCopied] = useState(false);
+  const handleCopyToClipBoard = async (seed) => {
+    await navigator.clipboard.writeText(seed);
+    setCopied(true);
+
+    // Reset the copied state after a certain duration
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
   };
 
   // Handling form submission
@@ -43,6 +65,33 @@ function HomePage() {
     navigate("/quiz", {
       state: { quiz: quiz, topic: topic, difficulty: difficulty },
     }); // Passes the props to QuizPage.js
+  };
+
+  const handleSubmitSeed = async (event) => {
+    event.preventDefault();
+
+    if (inputSeed === "") return;
+
+    // Fetch generated quiz from API then routes to quiz page, if successful
+    let response = await fetch(`/api/quiz/generateQuizFromSeed`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        seed: inputSeed,
+      }),
+    });
+
+    if (response.status === 200) {
+      setWrongSeed(false);
+      let quiz = await response.json();
+      navigate("/quiz", {
+        state: { quiz: quiz, topic: quiz.topic, difficulty: quiz.difficulty },
+      }); // Passes the props to QuizPage.js
+    } else {
+      setWrongSeed(true);
+    }
   };
 
   // Form values
@@ -132,6 +181,31 @@ function HomePage() {
         </form>
       </Paper>
 
+      <Paper
+        elevation={3}
+        style={{ marginTop: "2rem", marginBottom: "2rem", padding: 8 }}
+      >
+        <Typography variant="h6">Got a quiz seed?</Typography>
+        <form onSubmit={handleSubmitSeed}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12}>
+              <TextField
+                label="Enter seed"
+                value={inputSeed}
+                onChange={handleInputSeedChange}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} container justifyContent="flex-end">
+              <Button variant="contained" color="secondary" type="submit">
+                Generate quiz!
+              </Button>
+            </Grid>
+          </Grid>
+          {wrongSeed ? "Invalid seed" : ""}
+        </form>
+      </Paper>
+
       <TableContainer component={Paper} sx={{ mb: "2rem" }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -140,6 +214,7 @@ function HomePage() {
               <TableCell align="right">Difficulty</TableCell>
               <TableCell align="right">Score</TableCell>
               <TableCell align="right">Date/Time (UTC)</TableCell>
+              <TableCell align="right">Seed</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -156,6 +231,16 @@ function HomePage() {
                   {item.score + "/" + item.maxscore}
                 </TableCell>
                 <TableCell align="right">{item.created}</TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    size="small"
+                    edge="start"
+                    color="inherit"
+                    onClick={() => handleCopyToClipBoard(item.seed)}
+                  >
+                    {copied ? "Copied!" : <ContentPasteIcon />}
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

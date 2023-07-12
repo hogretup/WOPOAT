@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MathComponent } from "mathjax-react";
-
 import {
   Container,
   Paper,
@@ -84,6 +83,7 @@ function QuizPage() {
         difficulty: difficulty,
         score: score,
         maxscore: maxscore,
+        seed: quiz.seed,
       }),
     });
   };

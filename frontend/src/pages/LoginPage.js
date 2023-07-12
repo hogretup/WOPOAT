@@ -26,6 +26,7 @@ function LoginPage() {
   };
 
   const handleLogin = async (event) => {
+    // Prevents default behaviour, i.e. page refresh
     event.preventDefault();
 
     // Returns true or false, for successful/unsuccessful authentication
@@ -38,7 +39,6 @@ function LoginPage() {
   };
 
   const goToSignupPage = () => {
-    // Add your sign up logic here
     console.log("Sign up button clicked");
     navigate("/signup");
   };

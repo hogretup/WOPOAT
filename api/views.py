@@ -8,21 +8,30 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from . import scripts
+from .quiz_scripts import scripts
 from .models import CompletedQuiz
 from .serializers import CompletedQuizSerializer
 
 
-# path: api/generateQuiz/<str:topic>/<int:difficulty>
+# path: api/quiz/generateQuiz/<str:topic>/<int:difficulty>
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
-    # Currently just generates an Expand quiz with 3 qns
-    return Response(scripts.generate_expandquiz(difficulty, 3))
+    # Currently just generates a quiz with 5 qns
+    return Response(scripts.generate_quiz(topic, difficulty, 5))
 
+# path: api/quiz/generateQuizFromSeed
+
+
+@api_view(['POST'])
+def generateQuizFromSeed(request):
+    data = request.data
+    return Response(scripts.generate_quiz_from_seed(data['seed']))
 
 # path: api/quiz/updateHistory
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+
+
+@ api_view(['POST'])
+@ permission_classes([IsAuthenticated])
 def updateQuizHistory(request):
     this_user = request.user
     data = request.data
@@ -31,7 +40,8 @@ def updateQuizHistory(request):
         topic=data['topic'],
         difficulty=data['difficulty'],
         score=data['score'],
-        maxscore=data['maxscore']
+        maxscore=data['maxscore'],
+        seed=data['seed']
     )
 
     serializer = CompletedQuizSerializer(cq, many=False)
@@ -39,8 +49,8 @@ def updateQuizHistory(request):
 
 
 # path: api/quiz/recent
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
 def getRecentQuizzes(request):
     """
     Returns the users' last 10 completed quizzes in database
