@@ -52,6 +52,25 @@ function HomePage() {
     }, 1000);
   };
 
+  // UTC datetime format to SGT converter (update to users' local timezone?)
+  const convertTime = (utcDateString) => {
+    var utcDate = new Date(utcDateString);
+
+    var options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+
+    // Converts to runtime's default timezone
+    var convertedDate = utcDate.toLocaleString("en-GB", options);
+
+    return convertedDate;
+  };
+
   // Handling form submission
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -213,7 +232,7 @@ function HomePage() {
               <TableCell>Topic</TableCell>
               <TableCell align="right">Difficulty</TableCell>
               <TableCell align="right">Score</TableCell>
-              <TableCell align="right">Date/Time (UTC)</TableCell>
+              <TableCell align="right">Date/Time</TableCell>
               <TableCell align="right">Seed</TableCell>
             </TableRow>
           </TableHead>
@@ -230,7 +249,7 @@ function HomePage() {
                 <TableCell align="right">
                   {item.score + "/" + item.maxscore}
                 </TableCell>
-                <TableCell align="right">{item.created}</TableCell>
+                <TableCell align="right">{convertTime(item.created)}</TableCell>
                 <TableCell align="right">
                   <IconButton
                     size="small"
