@@ -41,14 +41,24 @@ function HomePage() {
   };
 
   // Handling "Copied!" message after copying seed to clipboard
-  const [copied, setCopied] = useState(false);
-  const handleCopyToClipBoard = async (seed) => {
+  const [copied, setCopied] = useState([]);
+  const handleCopyToClipBoard = async (seed, index) => {
     await navigator.clipboard.writeText(seed);
-    setCopied(true);
+
+    // Set copied state
+    setCopied((copied) => {
+      const newCopied = [...copied];
+      newCopied[index] = true;
+      return newCopied;
+    });
 
     // Reset the copied state after a certain duration
     setTimeout(() => {
-      setCopied(false);
+      setCopied((copied) => {
+        const newCopied = [...copied];
+        newCopied[index] = false;
+        return newCopied;
+      });
     }, 1000);
   };
 
@@ -143,6 +153,7 @@ function HomePage() {
       // Not sure when response would fail
       if (response.status === 200) {
         setquizHistory(data);
+        setCopied(Array(data.length).fill(false));
       } else if (response.statusText === "Unauthorized") {
         logoutUser();
       }
@@ -255,9 +266,13 @@ function HomePage() {
                     size="small"
                     edge="start"
                     color="inherit"
-                    onClick={() => handleCopyToClipBoard(item.seed)}
+                    onClick={() => handleCopyToClipBoard(item.seed, index)}
                   >
-                    {copied ? "Copied!" : <ContentPasteIcon />}
+                    {copied[index] ? (
+                      <p style={{ fontSize: "12px" }}>Copied!</p>
+                    ) : (
+                      <ContentPasteIcon />
+                    )}
                   </IconButton>
                 </TableCell>
               </TableRow>
