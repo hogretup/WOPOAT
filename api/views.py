@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
 # Response() will automatically serialize any
 # Python object (e.g. Strings, lists, dicts) into JSON
 # Note that this "serialization" is distinct from
@@ -10,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .quiz_scripts import scripts
 from .models import CompletedQuiz, FriendRequest
-from .serializers import CompletedQuizSerializer, UserProfileSerializer
+from .serializers import CompletedQuizSerializer, UserProfileSerializer, FriendRequestSerializer
 
 
 # path: api/generateQuiz/<str:topic>/<int:difficulty>
@@ -43,8 +45,6 @@ def updateQuizHistory(request):
         quiz=data['quiz']
     )
 
-    print(data['quiz'])
-
     serializer = CompletedQuizSerializer(cq, many=False)
     return Response(serializer.data)
 
@@ -73,8 +73,22 @@ def getUserProfile(request):
     """
     Returns the User Profile with user information
     """
+    friends = request.user.myprofile.friends.all()
+    print(friends)
     serializer = UserProfileSerializer(request.user.myprofile)
     return Response(serializer.data)
+
+
+# path: api/getFriendsList
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
+def getFriendsList(request):
+    """
+    Returns a list of usernames of friends
+    """
+    friends = request.user.myprofile.friends.all()
+    friendList = [friend.username for friend in friends]
+    return Response(friendList)
 
 
 # path: api/sendFriendRequest/<str:username>
@@ -86,6 +100,10 @@ def sendFriendRequest(request, username):
     """
     from_user = request.user
     to_user = User.objects.get(username=username)
+
+    # Can't send a friend request to yourself
+    if to_user == from_user:
+        return Response("failed", status=status.HTTP_400_BAD_REQUEST)
     friend_request, created = FriendRequest.objects.get_or_create(
         from_user=from_user, to_user=to_user)
     if created:
@@ -126,3 +144,18 @@ def declineFriendRequest(request, requestID):
         return Response('successfully declined')
     else:
         return Response('something went wrong when declining')
+
+
+# path: api/getFriendRequests
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
+def getFriendRequests(request):
+    """
+    Returns a list of all pending friend requests to current user,
+    e.g. [{username: 'a', requestID: '1'}]
+    """
+    user = request.user
+    friend_requests = user.to_user.all().order_by('-created')
+    request_list = [{'username': friend_request.from_user.username,
+                     'requestID': friend_request.id} for friend_request in friend_requests]
+    return Response(request_list)

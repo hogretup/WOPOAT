@@ -18,7 +18,8 @@ class CompletedQuiz(models.Model):
         return f"Topic: {self.topic}, Difficulty: {self.difficulty}, Score: {self.score}, Maxscore: {self.maxscore}"
 
 
-# User model to store non-auth related information
+# User model to store non-auth related informatio
+# CURRENTLY NOT IN USE
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="myprofile", on_delete=models.CASCADE)
@@ -27,6 +28,8 @@ class UserProfile(models.Model):
 
 
 class FriendRequest(models.Model):
+
+    created = models.DateTimeField(auto_now_add=True)
 
     # many-to-one relationship with user who is sending the request
     from_user = models.ForeignKey(

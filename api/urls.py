@@ -9,14 +9,15 @@ urlpatterns = [
          name="generateQuizFromSeed"),
     path('quiz/updateHistory', views.updateQuizHistory, name="updateQuizHistory"),
     path('quiz/recent', views.getRecentQuizzes, name="getRecentQuizzes"),
-    path('sendFriendRequest/<int:username>',
+
+    path('sendFriendRequest/<str:username>',
          views.sendFriendRequest, name="sendFriendRequest"),
     path('acceptFriendRequest/<int:requestID>',
          views.acceptFriendRequest, name='acceptFriendRequest'),
     path('declineFriendRequest/<int:requestID>',
          views.declineFriendRequest, name='declineFriendRequest'),
-    path('getUserProfile', views.getUserProfile, name="getUserProfile")
 
-
-
+    path('getUserProfile', views.getUserProfile, name="getUserProfile"),
+    path('getFriendRequests', views.getFriendRequests, name="getFriendRequests"),
+    path('getFriendsList', views.getFriendsList, name="getFriendsList")
 ]

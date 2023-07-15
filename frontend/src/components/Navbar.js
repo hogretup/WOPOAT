@@ -40,6 +40,7 @@ function NavBar() {
   };
 
   const handleFriendsButton = () => {
+    handleCloseUserMenu();
     navigate("/friends");
   };
 
