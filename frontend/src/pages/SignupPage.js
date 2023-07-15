@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
@@ -19,24 +21,21 @@ const SignUpPage = () => {
     // Add your sign-up logic here
     const data = {
       username: username,
-      password: password
+      password: password,
     };
-    console.log(data);
-    console.log('here is the data');
-    try {
-      const response = await fetch('/login/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+    const response = await fetch("/login/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.status === 200) {
       navigate("/");
-    } catch (error) {
-      console.log(error)
+    } else {
+      setErrorMessage("That username is taken. Try another.");
     }
   };
-
 
   return (
     <div>
@@ -60,10 +59,9 @@ const SignUpPage = () => {
             onChange={handlePasswordChange}
           />
         </div>
-        <button onClick={handleSignup}>
-          Sign Up
-        </button>
+        <button onClick={handleSignup}>Sign Up</button>
       </form>
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
