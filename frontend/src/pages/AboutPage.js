@@ -11,9 +11,10 @@ function AboutPage() {
         quizzes. All quizzes are randomly generated, with answers verified using
         symbolic computation! The platform will feature customisable topics and
         difficulty, and an account system to view your recent quiz history. Just
-        select your desired topic and difficulty, and start quizzing! <br />
-        <br />
-        Note: Currently, only "Expand" questions are available.
+        select your desired topic and difficulty, and start quizzing! If you
+        want to share a quiz with your friends, just copy the seed and send it
+        to others - apart from the randomly generated options and variable
+        names, the generated quiz will be exactly the same.
       </Paper>
     </Container>
   );

@@ -92,8 +92,25 @@ function HomePage() {
     let response = await fetch(`/api/generateQuiz/${topic}/${difficulty}`);
     let quiz = await response.json();
     navigate("/quiz", {
-      state: { quiz: quiz, topic: topic, difficulty: difficulty },
+      state: {
+        quiz: quiz,
+        topic: topic,
+        difficulty: difficulty,
+        completed: false,
+      },
     }); // Passes the props to QuizPage.js
+  };
+
+  // Handling viewing of past quizzes
+  const handleViewQuiz = async (completedQuiz) => {
+    navigate("/quiz", {
+      state: {
+        quiz: completedQuiz,
+        topic: completedQuiz.topic,
+        difficulty: completedQuiz.difficulty,
+        completed: true,
+      },
+    });
   };
 
   const handleSubmitSeed = async (event) => {
@@ -116,7 +133,12 @@ function HomePage() {
       setWrongSeed(false);
       let quiz = await response.json();
       navigate("/quiz", {
-        state: { quiz: quiz, topic: quiz.topic, difficulty: quiz.difficulty },
+        state: {
+          quiz: quiz,
+          topic: quiz.topic,
+          difficulty: quiz.difficulty,
+          completed: false,
+        },
       }); // Passes the props to QuizPage.js
     } else {
       setWrongSeed(true);
@@ -245,6 +267,7 @@ function HomePage() {
               <TableCell align="right">Score</TableCell>
               <TableCell align="right">Date/Time</TableCell>
               <TableCell align="right">Seed</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -274,6 +297,16 @@ function HomePage() {
                       <ContentPasteIcon />
                     )}
                   </IconButton>
+                </TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleViewQuiz(item.quiz)}
+                    disabled={!item.quiz}
+                  >
+                    View
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
