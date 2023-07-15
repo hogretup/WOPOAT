@@ -39,6 +39,10 @@ function NavBar() {
     callLogout();
   };
 
+  const handleFriendsButton = () => {
+    navigate("/friends");
+  };
+
   let { user, logoutUser } = useContext(AuthContext);
 
   const callLogout = async () => {
@@ -49,6 +53,7 @@ function NavBar() {
   const pages = [{ name: "About", handler: handleAboutButton }];
   const settings = [
     { name: "Profile", handler: handleProfileButton },
+    { name: "Friends", handler: handleFriendsButton },
     { name: "Logout", handler: handleLogoutButton },
   ];
 

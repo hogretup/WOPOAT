@@ -1,6 +1,5 @@
 import { Typography, Container, Paper } from "@mui/material";
 import React from "react";
-import { LoremIpsum } from "react-lorem-ipsum";
 
 function AboutPage() {
   return (

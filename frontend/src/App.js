@@ -10,6 +10,7 @@ import QuizPage from "./pages/QuizPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignupPage";
 import AboutPage from "./pages/AboutPage";
+import FriendsPage from "./pages/FriendsPage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/quiz" element={<QuizPage />}></Route>
                 <Route path="/home" element={<HomePage />}></Route>
                 <Route path="/about" element={<AboutPage />}></Route>
+                <Route path="/friends" element={<FriendsPage />}></Route>
               </Route>
             </Route>
 
