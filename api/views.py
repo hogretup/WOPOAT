@@ -41,8 +41,11 @@ def updateQuizHistory(request):
         difficulty=data['difficulty'],
         score=data['score'],
         maxscore=data['maxscore'],
-        seed=data['seed']
+        seed=data['seed'],
+        quiz=data['quiz']
     )
+
+    print(data['quiz'])
 
     serializer = CompletedQuizSerializer(cq, many=False)
     return Response(serializer.data)

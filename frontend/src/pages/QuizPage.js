@@ -21,12 +21,14 @@ import Confetti from "../components/Confetti";
 function QuizPage() {
   // Getting props
   const location = useLocation();
-  let { quiz, topic, difficulty } = location.state;
+  let { quiz, topic, difficulty, completed } = location.state;
 
   // Quiz submission variables
-  const [selectedOptions, setSelectedOptions] = useState({}); // dict, e.g. { qnIndex: selectedOption }
+  const [selectedOptions, setSelectedOptions] = useState(() =>
+    completed ? quiz.selectedOptions : {}
+  ); // dict, e.g. { qnIndex: selectedOption }
   const [activeQn, setActiveQn] = useState(0); // int, denotes current active qn
-  const [submitted, setSubmitted] = useState(false); // boolean, denotes whether submit button has been clicked
+  const [submitted, setSubmitted] = useState(completed); // boolean, denotes whether submit button has been clicked
   const [confettiVisible, setConfettiVisible] = useState(false);
 
   // Handler
@@ -72,6 +74,7 @@ function QuizPage() {
 
   // Adds completed quiz to quiz history
   const addToHistory = async (score, maxscore) => {
+    quiz.selectedOptions = selectedOptions;
     await fetch(`/api/quiz/updateHistory`, {
       method: "POST",
       headers: {
@@ -84,6 +87,7 @@ function QuizPage() {
         score: score,
         maxscore: maxscore,
         seed: quiz.seed,
+        quiz: quiz,
       }),
     });
   };
