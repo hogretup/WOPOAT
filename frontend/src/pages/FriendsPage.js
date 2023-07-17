@@ -14,6 +14,7 @@ import {
   TableRow,
   Box,
   Button,
+  Avatar,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AuthContext from "../context/AuthContext";
@@ -190,7 +191,7 @@ function FriendsPage() {
             </Table>
           </TableContainer>
           <TableContainer component={Paper} sx={{ mb: "2rem" }}>
-            <Table sx={{ minWidth: 650 }} size="small">
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
                   <TableCell>Friend List</TableCell>
@@ -204,13 +205,26 @@ function FriendsPage() {
                 ) : (
                   <></>
                 )}
-                {friendsList.map((item, index) => (
+                {friendsList.map((friend, index) => (
                   <TableRow
                     key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {item}
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <Avatar
+                          alt="?"
+                          src={
+                            friend.profile_image
+                              ? friend.profile_image
+                              : undefined
+                          }
+                          sx={{ marginRight: "12px" }}
+                        />
+                        <Typography variant="h6">
+                          {friend.displayName}
+                        </Typography>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

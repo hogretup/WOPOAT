@@ -4,6 +4,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import ProfileIcon from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -94,8 +96,10 @@ function NavBar() {
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
-            <Typography variant="h6">{displayName}</Typography>
-            <ProfileIcon fontSize="large" />
+            <Typography variant="h6" sx={{ marginRight: "4px" }}>
+              {displayName}
+            </Typography>
+            <Avatar alt="?" src={profilePicture ? profilePicture : undefined} />
           </IconButton>
           <Menu
             id="user-menu"

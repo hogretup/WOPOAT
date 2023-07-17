@@ -112,7 +112,8 @@ def getFriendsList(request):
     Returns a list of usernames of friends
     """
     friends = request.user.myprofile.friends.all()
-    friendList = [friend.username for friend in friends]
+    friendList = [UserProfileSerializer(
+        friend.myprofile).data for friend in friends]
     return Response(friendList)
 
 

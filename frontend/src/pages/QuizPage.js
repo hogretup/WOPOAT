@@ -151,9 +151,7 @@ function QuizPage() {
             ))}
           </Stack>
         </Paper>
-        <Box display="flex" justifyContent="flex-start">
-          <Timer />
-        </Box>
+        <Box display="flex" justifyContent="flex-start"></Box>
         <Box display="flex" justifyContent="flex-end">
           <Button
             variant="contained"

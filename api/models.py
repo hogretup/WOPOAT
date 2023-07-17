@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="myprofile", on_delete=models.CASCADE)
     friends = models.ManyToManyField(
-        User, related_name="friendsprofile", blank=True)
+        User, related_name="friends", blank=True)
     email = models.EmailField(null=True)
     profile_image = models.ImageField(
         null=True, blank='True', upload_to=upload_to)
