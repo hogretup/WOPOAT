@@ -19,5 +19,6 @@ urlpatterns = [
 
     path('getUserProfile', views.getUserProfile, name="getUserProfile"),
     path('getFriendRequests', views.getFriendRequests, name="getFriendRequests"),
-    path('getFriendsList', views.getFriendsList, name="getFriendsList")
+    path('getFriendsList', views.getFriendsList, name="getFriendsList"),
+    path('updateUserDetails', views.updateUserDetails, name="updateUserDetails")
 ]

@@ -25,7 +25,8 @@ class UserProfile(models.Model):
         User, related_name="myprofile", on_delete=models.CASCADE)
     friends = models.ManyToManyField(
         User, related_name="friendsprofile", blank=True)
-
+    email = models.EmailField(null=True)    
+    profile_image = models.ImageField(null=True, blank='True', upload_to="profile_images")
 
 class FriendRequest(models.Model):
 

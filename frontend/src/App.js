@@ -11,7 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignupPage";
 import AboutPage from "./pages/AboutPage";
 import FriendsPage from "./pages/FriendsPage";
-
+import ProfilePage from "./pages/ProfilePage";
 // Components
 import Navbar from "./components/Navbar";
 
@@ -34,6 +34,7 @@ function App() {
                 <Route path="/home" element={<HomePage />}></Route>
                 <Route path="/about" element={<AboutPage />}></Route>
                 <Route path="/friends" element={<FriendsPage />}></Route>
+                <Route path="/profile" element={<ProfilePage />}></Route>
               </Route>
             </Route>
 

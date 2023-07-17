@@ -9,9 +9,10 @@ from django.contrib.auth.models import User
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
 
 from .quiz_scripts import scripts
-from .models import CompletedQuiz, FriendRequest
+from .models import CompletedQuiz, FriendRequest, UserProfile
 from .serializers import CompletedQuizSerializer, UserProfileSerializer, FriendRequestSerializer
 
 
@@ -159,3 +160,14 @@ def getFriendRequests(request):
     request_list = [{'username': friend_request.from_user.username,
                      'requestID': friend_request.id} for friend_request in friend_requests]
     return Response(request_list)
+
+from django.http import JsonResponse, QueryDict
+from django.views.decorators.csrf import csrf_exempt
+
+# path: api/updateUserDetails
+@ api_view(['POST'])
+@ permission_classes([IsAuthenticated])
+def updateUserDetails(request):
+        print(request.body)
+        return
+        
