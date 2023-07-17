@@ -33,6 +33,7 @@ function NavBar() {
   };
   const handleProfileButton = () => {
     handleCloseUserMenu();
+    navigate("/profile");
   };
   const handleLogoutButton = () => {
     handleCloseUserMenu();

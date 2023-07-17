@@ -15,80 +15,93 @@ import TableRow from "@mui/material/TableRow";
 import AuthContext from "../context/AuthContext";
 
 function ProfilePage() {
+  let { user, authTokens, logoutUser } = useContext(AuthContext);
   const [displayName, setDisplayName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [email, setEmail] = useState("");
+  const [displayNameChanged, setDisplayNameChanged] = useState(false);
+  const [profilePictureChanged, setProfilePictureChanged] = useState(false);
+  const [emailChanged, setEmailChanged] = useState(false);
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState("profile");
   const [quizHistory, setquizHistory] = useState([]);
 
-  let { authTokens } = useContext(AuthContext);
-  // Simulating data retrieval from a database
-  useEffect(() => {
-    // Fetch user data from the database and update the state
-    const fetchData = async () => {
-      try {
-        // Simulated API call or database query
-        const response = await fetch(`api/getUserProfile`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + String(authTokens.access),
-          },})
-          if (response.ok) {
-            const data = await response.json()
-            setProfilePicture(data.profile_image);
-            console.log(data)
-          }
-      } catch (error) {
-        console.log("Error fetching user data:", error);
-      }
-    };
+  // Get user profile info
+  const fetchUserProfile = async () => {
+    const response = await fetch(`api/getUserProfile`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    });
 
-    fetchData();
-  }, []);
-
-  const updateProfilePicture = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append('profile_image', file);
-  
-      const response = await fetch(`api/updateUserDetails`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": `multipart/form-data`,
-          Authorization: `Bearer ${authTokens.access}`,
-        },
-        body: formData,
-      });
-      
-      if (response.ok) {
-        console.log('Profile picture updated successfully');
-        // Handle success case as needed
-      } else {
-        // Handle the case where the response is not successful
-        console.error('Failed to update profile picture:', response.status);
-      }
-    } catch (error) {
-      // Handle any error that occurs during the fetch request
-      console.error('Error updating profile picture:', error);
+    const data = await response.json();
+    if (response.status === 200) {
+      setProfilePicture(data.profile_image);
+      setDisplayName(data.displayName);
+      setEmail(data.email);
+    } else if (response.statusText === "Unauthorized") {
+      logoutUser();
     }
   };
-  
+
+  // Updates user details in backend, and refreshes data
+  const updateUserDetails = async (
+    updateProfilePic,
+    updateDisplayName,
+    updateEmail,
+    profilePicFile
+  ) => {
+    // Update profile info in backend
+    const formData = new FormData();
+
+    if (updateProfilePic) {
+      formData.append("profile_image", profilePicFile);
+    }
+    if (updateDisplayName) {
+      formData.append("displayName", displayName);
+    }
+    if (updateEmail) {
+      formData.append("email", email);
+    }
+    const response = await fetch(`api/updateUserDetails`, {
+      method: "POST",
+      headers: {
+        //"Content-Type": `multipart/form-data`,
+        Authorization: `Bearer ${authTokens.access}`,
+      },
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      // Refresh user profile info
+      fetchUserProfile();
+    } else {
+      logoutUser();
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
   const handleDisplayNameChange = (e) => {
     setDisplayName(e.target.value);
+    setDisplayNameChanged(true);
   };
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfilePicture(URL.createObjectURL(file));
+      updateUserDetails(true, false, false, file);
+      setProfilePictureChanged(true);
     }
   };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
+    setEmailChanged(true);
   };
 
   const handleEditProfile = () => {
@@ -96,11 +109,19 @@ function ProfilePage() {
     setSelectedTab("profile");
   };
 
-  const handleSaveChanges = () => {
-    // Perform database update or API call to save the changes
-    // Here, you can send the updated data to the server
-    updateProfilePicture(profilePicture)
-    // After successful update, exit edit mode
+  const handleSaveChanges = async () => {
+    // Update the inputs that changed
+    updateUserDetails(
+      profilePictureChanged,
+      displayNameChanged,
+      emailChanged,
+      null
+    );
+
+    setProfilePictureChanged(false);
+    setDisplayName(false);
+    setEmailChanged(false);
+
     setIsEditMode(false);
   };
 
@@ -115,11 +136,11 @@ function ProfilePage() {
         <form>
           <Stack spacing={2} alignItems="center">
             <Avatar
-              alt="Profile Picture"
+              alt="?"
               src={profilePicture ? profilePicture : undefined} // Display the profile picture if it exists
               sx={{ width: 100, height: 100 }}
             >
-              {profilePicture ? null : <ImageIcon fontSize="large" />} {/* Display the icon only if there is no profile picture */}
+              {/* Display the icon only if there is no profile picture */}
             </Avatar>
             {isEditMode ? (
               <>
@@ -138,7 +159,7 @@ function ProfilePage() {
               </>
             ) : null}
             <TextField
-              label="Displayed Name"
+              label="Display Name"
               value={displayName}
               onChange={handleDisplayNameChange}
               variant="outlined"
@@ -174,14 +195,14 @@ function ProfilePage() {
           </Stack>
         </form>
       ) : (
-      <Button
-        type="button"
-        variant="contained"
-        color="primary"
-        onClick={handleEditProfile}
-      >
-        Edit Profile
-      </Button>
+        <Button
+          type="button"
+          variant="contained"
+          color="primary"
+          onClick={handleEditProfile}
+        >
+          Edit Profile
+        </Button>
       )}
       <BottomNavigation
         value={selectedTab}
