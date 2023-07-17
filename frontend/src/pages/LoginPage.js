@@ -1,6 +1,23 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Box,
+  Link,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { deepOrange } from "@mui/material/colors";
 import AuthContext from "../context/AuthContext";
+
+// Custom color theme
+const theme = createTheme({
+  palette: {
+    primary: deepOrange,
+  },
+});
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -8,14 +25,12 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
-  let { user, loginUser } = useContext(AuthContext);
+  const { user, loginUser } = useContext(AuthContext);
 
   // If user is already logged in, redirect to homepage
-  useEffect(() => {
-    if (user) {
-      navigate("/home");
-    }
-  }, []);
+  if (user) {
+    navigate("/home");
+  }
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -26,10 +41,8 @@ function LoginPage() {
   };
 
   const handleLogin = async (event) => {
-    // Prevents default behaviour, i.e. page refresh
     event.preventDefault();
 
-    // Returns true or false, for successful/unsuccessful authentication
     let authSucceeded = await loginUser(username, password);
     if (authSucceeded) {
       navigate("/home");
@@ -39,42 +52,77 @@ function LoginPage() {
   };
 
   const goToSignupPage = () => {
-    console.log("Sign up button clicked");
     navigate("/signup");
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={handleUsernameChange}
-          required
-        />
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
+            QUIZICALC
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleLogin}
+            sx={{ mt: 3, width: "100%" }}
+          >
+            <TextField
+              fullWidth
+              id="username"
+              label="Username"
+              value={username}
+              onChange={handleUsernameChange}
+              color="primary"
+              required
+            />
 
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={handlePasswordChange}
-          required
-        />
+            <TextField
+              fullWidth
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              color="primary"
+              required
+              sx={{ mt: 2 }}
+            />
 
-        <button type="submit">Sign In</button>
-      </form>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+          </Box>
 
-      {errorMessage && <p>{errorMessage}</p>}
+          {errorMessage && (
+            <Typography color="error" align="center">
+              {errorMessage}
+            </Typography>
+          )}
 
-      <p>
-        Don't have an account?{" "}
-        <button onClick={goToSignupPage}>Click here to sign up</button>.
-      </p>
-    </div>
+          <Typography variant="body2" sx={{ mt: 3 }}>
+            Don't have an account?{" "}
+            <Link onClick={goToSignupPage} color="primary">
+              Click here to sign up
+            </Link>
+          </Typography>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
 
