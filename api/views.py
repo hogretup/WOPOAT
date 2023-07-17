@@ -74,7 +74,6 @@ def getUserProfile(request):
     Returns the User Profile with user information
     """
     friends = request.user.myprofile.friends.all()
-    print(friends)
     serializer = UserProfileSerializer(request.user.myprofile)
     return Response(serializer.data)
 
