@@ -94,6 +94,7 @@ def updateUserDetails(request):
 
     # data from React might literally be the string 'null'
     if image and image != 'null':
+        # Previous files are deleted using django-cleanup
         userprofile.profile_image = image
     if email and email != 'null':
         userprofile.email = email
