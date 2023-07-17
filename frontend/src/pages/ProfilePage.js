@@ -13,12 +13,19 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import AuthContext from "../context/AuthContext";
+import UserContext from "../context/UserContext";
 
 function ProfilePage() {
-  let { user, authTokens, logoutUser } = useContext(AuthContext);
-  const [displayName, setDisplayName] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
-  const [email, setEmail] = useState("");
+  // Auth context
+  let { authTokens, logoutUser } = useContext(AuthContext);
+
+  // User context (with actual profile info from backend)
+  let { profilePicture, displayName, email, refreshProfileData } =
+    useContext(UserContext);
+
+  // Profile info fields filled in
+  const [displayNameField, setDisplayNameField] = useState(displayName);
+  const [emailField, setEmailField] = useState(email);
   const [displayNameChanged, setDisplayNameChanged] = useState(false);
   const [profilePictureChanged, setProfilePictureChanged] = useState(false);
   const [emailChanged, setEmailChanged] = useState(false);
@@ -26,25 +33,6 @@ function ProfilePage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState("profile");
   const [quizHistory, setquizHistory] = useState([]);
-
-  // Get user profile info
-  const fetchUserProfile = async () => {
-    const response = await fetch(`api/getUserProfile`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + String(authTokens.access),
-      },
-    });
-
-    const data = await response.json();
-    if (response.status === 200) {
-      setProfilePicture(data.profile_image);
-      setDisplayName(data.displayName);
-      setEmail(data.email);
-    } else if (response.statusText === "Unauthorized") {
-      logoutUser();
-    }
-  };
 
   // Updates user details in backend, and refreshes data
   const updateUserDetails = async (
@@ -60,10 +48,10 @@ function ProfilePage() {
       formData.append("profile_image", profilePicFile);
     }
     if (updateDisplayName) {
-      formData.append("displayName", displayName);
+      formData.append("displayName", displayNameField);
     }
     if (updateEmail) {
-      formData.append("email", email);
+      formData.append("email", emailField);
     }
     const response = await fetch(`api/updateUserDetails`, {
       method: "POST",
@@ -76,18 +64,14 @@ function ProfilePage() {
 
     if (response.status === 200) {
       // Refresh user profile info
-      fetchUserProfile();
+      refreshProfileData();
     } else {
       logoutUser();
     }
   };
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
   const handleDisplayNameChange = (e) => {
-    setDisplayName(e.target.value);
+    setDisplayNameField(e.target.value);
     setDisplayNameChanged(true);
   };
 
@@ -100,7 +84,7 @@ function ProfilePage() {
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmailField(e.target.value);
     setEmailChanged(true);
   };
 
@@ -119,7 +103,7 @@ function ProfilePage() {
     );
 
     setProfilePictureChanged(false);
-    setDisplayName(false);
+    setDisplayNameChanged(false);
     setEmailChanged(false);
 
     setIsEditMode(false);
@@ -160,7 +144,7 @@ function ProfilePage() {
             ) : null}
             <TextField
               label="Display Name"
-              value={displayName}
+              value={displayNameField}
               onChange={handleDisplayNameChange}
               variant="outlined"
               disabled={!isEditMode}
@@ -168,7 +152,7 @@ function ProfilePage() {
             <TextField
               label="Email"
               type="email"
-              value={email}
+              value={emailField}
               onChange={handleEmailChange}
               variant="outlined"
               disabled={!isEditMode}

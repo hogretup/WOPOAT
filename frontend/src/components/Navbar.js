@@ -12,8 +12,15 @@ import SumIcon from "@mui/icons-material/Functions";
 import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../context/AuthContext";
+import UserContext from "../context/UserContext";
 
 function NavBar() {
+  // Auth Context
+  let { user, logoutUser } = useContext(AuthContext);
+
+  // User Context
+  let { displayName, profilePicture } = useContext(UserContext);
+
   // Can consider making basic Menu button a component
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -44,8 +51,6 @@ function NavBar() {
     handleCloseUserMenu();
     navigate("/friends");
   };
-
-  let { user, logoutUser } = useContext(AuthContext);
 
   const callLogout = async () => {
     logoutUser();
@@ -89,7 +94,7 @@ function NavBar() {
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
-            <Typography variant="h6">{user && user.username}</Typography>
+            <Typography variant="h6">{displayName}</Typography>
             <ProfileIcon fontSize="large" />
           </IconButton>
           <Menu
