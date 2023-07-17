@@ -9,7 +9,6 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-  AppBar,
   Radio,
   Button,
 } from "@mui/material";
@@ -17,6 +16,7 @@ import { styled } from "@mui/system";
 import AuthContext from "../context/AuthContext";
 
 import Confetti from "../components/Confetti";
+import Timer from "../components/Timer";
 
 function QuizPage() {
   // Getting props
@@ -151,6 +151,7 @@ function QuizPage() {
             ))}
           </Stack>
         </Paper>
+        <Box display="flex" justifyContent="flex-start"></Box>
         <Box display="flex" justifyContent="flex-end">
           <Button
             variant="contained"

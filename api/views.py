@@ -9,14 +9,15 @@ from django.contrib.auth.models import User
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .quiz_scripts import scripts
 from .models import CompletedQuiz, FriendRequest, UserProfile
 from .serializers import CompletedQuizSerializer, UserProfileSerializer, FriendRequestSerializer
 
-
 # path: api/generateQuiz/<str:topic>/<int:difficulty>
+
+
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
     # Currently just generates a quiz with 5 qns
@@ -75,9 +76,32 @@ def getUserProfile(request):
     Returns the User Profile with user information
     """
     friends = request.user.myprofile.friends.all()
-    print(friends)
     serializer = UserProfileSerializer(request.user.myprofile)
     return Response(serializer.data)
+
+
+# path: api/updateUserDetails
+@ api_view(['POST'])
+@ permission_classes([IsAuthenticated])
+def updateUserDetails(request):
+    """
+    Updates user details
+    """
+    image = request.data.get('profile_image', False)
+    displayName = request.data.get('displayName', False)
+    email = request.data.get('email', False)
+    userprofile = request.user.myprofile
+
+    # data from React might literally be the string 'null'
+    if image and image != 'null':
+        # Previous files are deleted using django-cleanup
+        userprofile.profile_image = image
+    if email and email != 'null':
+        userprofile.email = email
+    if displayName and displayName != 'null':
+        userprofile.displayName = displayName
+    userprofile.save()
+    return Response("Ok")
 
 
 # path: api/getFriendsList
@@ -88,7 +112,8 @@ def getFriendsList(request):
     Returns a list of usernames of friends
     """
     friends = request.user.myprofile.friends.all()
-    friendList = [friend.username for friend in friends]
+    friendList = [UserProfileSerializer(
+        friend.myprofile).data for friend in friends]
     return Response(friendList)
 
 
@@ -160,14 +185,3 @@ def getFriendRequests(request):
     request_list = [{'username': friend_request.from_user.username,
                      'requestID': friend_request.id} for friend_request in friend_requests]
     return Response(request_list)
-
-from django.http import JsonResponse, QueryDict
-from django.views.decorators.csrf import csrf_exempt
-
-# path: api/updateUserDetails
-@ api_view(['POST'])
-@ permission_classes([IsAuthenticated])
-def updateUserDetails(request):
-        print(request.body)
-        return
-        

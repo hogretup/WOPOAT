@@ -4,6 +4,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import ProfileIcon from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -12,8 +14,15 @@ import SumIcon from "@mui/icons-material/Functions";
 import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../context/AuthContext";
+import UserContext from "../context/UserContext";
 
 function NavBar() {
+  // Auth Context
+  let { user, logoutUser } = useContext(AuthContext);
+
+  // User Context
+  let { displayName, profilePicture } = useContext(UserContext);
+
   // Can consider making basic Menu button a component
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -33,6 +42,7 @@ function NavBar() {
   };
   const handleProfileButton = () => {
     handleCloseUserMenu();
+    navigate("/profile");
   };
   const handleLogoutButton = () => {
     handleCloseUserMenu();
@@ -43,8 +53,6 @@ function NavBar() {
     handleCloseUserMenu();
     navigate("/friends");
   };
-
-  let { user, logoutUser } = useContext(AuthContext);
 
   const callLogout = async () => {
     logoutUser();
@@ -88,8 +96,10 @@ function NavBar() {
             onClick={handleOpenUserMenu}
             sx={{ p: 0 }}
           >
-            <Typography variant="h6">{user && user.username}</Typography>
-            <ProfileIcon fontSize="large" />
+            <Typography variant="h6" sx={{ marginRight: "4px" }}>
+              {displayName}
+            </Typography>
+            <Avatar alt="?" src={profilePicture ? profilePicture : undefined} />
           </IconButton>
           <Menu
             id="user-menu"

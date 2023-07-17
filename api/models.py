@@ -18,15 +18,22 @@ class CompletedQuiz(models.Model):
         return f"Topic: {self.topic}, Difficulty: {self.difficulty}, Score: {self.score}, Maxscore: {self.maxscore}"
 
 
+def upload_to(instance, filename):
+    print(filename)
+    return 'images/{filename}'.format(filename=filename)
+
+
 # User model to store non-auth related informatio
-# CURRENTLY NOT IN USE
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="myprofile", on_delete=models.CASCADE)
     friends = models.ManyToManyField(
-        User, related_name="friendsprofile", blank=True)
-    email = models.EmailField(null=True)    
-    profile_image = models.ImageField(null=True, blank='True', upload_to="profile_images")
+        User, related_name="friends", blank=True)
+    email = models.EmailField(null=True)
+    profile_image = models.ImageField(
+        null=True, blank='True', upload_to=upload_to)
+    displayName = models.TextField(null=True)
+
 
 class FriendRequest(models.Model):
 

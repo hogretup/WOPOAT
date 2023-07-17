@@ -14,13 +14,14 @@ import {
   TableRow,
   Box,
   Button,
+  Avatar,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AuthContext from "../context/AuthContext";
+import UserContext from "../context/UserContext";
 
 function FriendsPage() {
   const [friendUsername, setFriendUsername] = useState("");
-  const [friendsList, setFriendsList] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
   const [usernameError, setUsernameError] = useState(false);
@@ -28,6 +29,9 @@ function FriendsPage() {
   const [friendRequestSent, setFriendRequestSent] = useState(false);
 
   // User context
+  let { friendsList, refreshProfileData } = useContext(UserContext);
+
+  // Auth context
   let { authTokens, logoutUser } = useContext(AuthContext);
 
   const handleAddFriend = async (event) => {
@@ -67,7 +71,8 @@ function FriendsPage() {
       },
     });
 
-    fetchFriendsList();
+    // Refresh friends list and friend requests list
+    refreshProfileData();
     fetchFriendRequests();
   };
 
@@ -80,27 +85,8 @@ function FriendsPage() {
       },
     });
 
-    // Refresh friends list and friend requests list
-    fetchFriendsList();
+    // Refresh friend requests list
     fetchFriendRequests();
-  };
-
-  const fetchFriendsList = async () => {
-    const response = await fetch("/api/getFriendsList", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + String(authTokens.access),
-      },
-    });
-
-    const data = await response.json();
-    // Not sure when response would fail
-    if (response.status === 200) {
-      setFriendsList(data);
-    } else if (response.statusText === "Unauthorized") {
-      logoutUser();
-    }
   };
 
   // Gets list of username & request IDs of pending friend requests
@@ -122,9 +108,9 @@ function FriendsPage() {
     }
   };
 
-  // Gets user profile for friends list, and list of pending friend requests
+  // Gets list of pending friend requests
   useEffect(() => {
-    fetchFriendsList();
+    // fetchFriendsList();
     fetchFriendRequests();
   }, []);
 
@@ -205,7 +191,7 @@ function FriendsPage() {
             </Table>
           </TableContainer>
           <TableContainer component={Paper} sx={{ mb: "2rem" }}>
-            <Table sx={{ minWidth: 650 }} size="small">
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
                   <TableCell>Friend List</TableCell>
@@ -219,13 +205,26 @@ function FriendsPage() {
                 ) : (
                   <></>
                 )}
-                {friendsList.map((item, index) => (
+                {friendsList.map((friend, index) => (
                   <TableRow
                     key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {item}
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <Avatar
+                          alt="?"
+                          src={
+                            friend.profile_image
+                              ? friend.profile_image
+                              : undefined
+                          }
+                          sx={{ marginRight: "12px" }}
+                        />
+                        <Typography variant="h6">
+                          {friend.displayName}
+                        </Typography>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

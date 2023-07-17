@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import PrivateRoutes from "./components/PrivateRoutes";
 import { AuthProvider } from "./context/AuthContext";
+import { UserProvider } from "./context/UserContext";
 
 import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
@@ -20,28 +21,30 @@ function App() {
     <div className="App">
       <Router>
         <AuthProvider>
-          <Routes>
-            <Route element={<PrivateRoutes />}>
-              <Route
-                element={
-                  <>
-                    <Navbar />
-                    <Outlet />
-                  </>
-                }
-              >
-                <Route path="/quiz" element={<QuizPage />}></Route>
-                <Route path="/home" element={<HomePage />}></Route>
-                <Route path="/about" element={<AboutPage />}></Route>
-                <Route path="/friends" element={<FriendsPage />}></Route>
-                <Route path="/profile" element={<ProfilePage />}></Route>
+          <UserProvider>
+            <Routes>
+              <Route element={<PrivateRoutes />}>
+                <Route
+                  element={
+                    <>
+                      <Navbar />
+                      <Outlet />
+                    </>
+                  }
+                >
+                  <Route path="/quiz" element={<QuizPage />}></Route>
+                  <Route path="/home" element={<HomePage />}></Route>
+                  <Route path="/about" element={<AboutPage />}></Route>
+                  <Route path="/friends" element={<FriendsPage />}></Route>
+                  <Route path="/profile" element={<ProfilePage />}></Route>
+                </Route>
               </Route>
-            </Route>
 
-            <Route path="/" element={<LoginPage />}></Route>
+              <Route path="/" element={<LoginPage />}></Route>
 
-            <Route path="/signup" element={<SignUpPage />}></Route>
-          </Routes>
+              <Route path="/signup" element={<SignUpPage />}></Route>
+            </Routes>
+          </UserProvider>
         </AuthProvider>
       </Router>
     </div>

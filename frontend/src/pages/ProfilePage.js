@@ -13,82 +13,79 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import AuthContext from "../context/AuthContext";
+import UserContext from "../context/UserContext";
 
 function ProfilePage() {
-  const [displayName, setDisplayName] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
-  const [email, setEmail] = useState("");
+  // Auth context
+  let { authTokens, logoutUser } = useContext(AuthContext);
+
+  // User context (with actual profile info from backend)
+  let { profilePicture, displayName, email, refreshProfileData } =
+    useContext(UserContext);
+
+  // Profile info fields filled in
+  const [displayNameField, setDisplayNameField] = useState(displayName);
+  const [emailField, setEmailField] = useState(email);
+  const [displayNameChanged, setDisplayNameChanged] = useState(false);
+  const [profilePictureChanged, setProfilePictureChanged] = useState(false);
+  const [emailChanged, setEmailChanged] = useState(false);
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState("profile");
   const [quizHistory, setquizHistory] = useState([]);
 
-  let { authTokens } = useContext(AuthContext);
-  // Simulating data retrieval from a database
-  useEffect(() => {
-    // Fetch user data from the database and update the state
-    const fetchData = async () => {
-      try {
-        // Simulated API call or database query
-        const response = await fetch(`api/getUserProfile`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + String(authTokens.access),
-          },})
-          if (response.ok) {
-            const data = await response.json()
-            setProfilePicture(data.profile_image);
-            console.log(data)
-          }
-      } catch (error) {
-        console.log("Error fetching user data:", error);
-      }
-    };
+  // Updates user details in backend, and refreshes data
+  const updateUserDetails = async (
+    updateProfilePic,
+    updateDisplayName,
+    updateEmail,
+    profilePicFile
+  ) => {
+    // Update profile info in backend
+    const formData = new FormData();
 
-    fetchData();
-  }, []);
+    if (updateProfilePic) {
+      formData.append("profile_image", profilePicFile);
+    }
+    if (updateDisplayName) {
+      formData.append("displayName", displayNameField);
+    }
+    if (updateEmail) {
+      formData.append("email", emailField);
+    }
+    const response = await fetch(`api/updateUserDetails`, {
+      method: "POST",
+      headers: {
+        //"Content-Type": `multipart/form-data`,
+        Authorization: `Bearer ${authTokens.access}`,
+      },
+      body: formData,
+    });
 
-  const updateProfilePicture = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append('profile_image', file);
-  
-      const response = await fetch(`api/updateUserDetails`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": `multipart/form-data`,
-          Authorization: `Bearer ${authTokens.access}`,
-        },
-        body: formData,
-      });
-      
-      if (response.ok) {
-        console.log('Profile picture updated successfully');
-        // Handle success case as needed
-      } else {
-        // Handle the case where the response is not successful
-        console.error('Failed to update profile picture:', response.status);
-      }
-    } catch (error) {
-      // Handle any error that occurs during the fetch request
-      console.error('Error updating profile picture:', error);
+    if (response.status === 200) {
+      // Refresh user profile info
+      refreshProfileData();
+    } else {
+      logoutUser();
     }
   };
-  
 
   const handleDisplayNameChange = (e) => {
-    setDisplayName(e.target.value);
+    setDisplayNameField(e.target.value);
+    setDisplayNameChanged(true);
   };
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfilePicture(URL.createObjectURL(file));
+      updateUserDetails(true, false, false, file);
+      setProfilePictureChanged(true);
     }
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmailField(e.target.value);
+    setEmailChanged(true);
   };
 
   const handleEditProfile = () => {
@@ -96,11 +93,19 @@ function ProfilePage() {
     setSelectedTab("profile");
   };
 
-  const handleSaveChanges = () => {
-    // Perform database update or API call to save the changes
-    // Here, you can send the updated data to the server
-    updateProfilePicture(profilePicture)
-    // After successful update, exit edit mode
+  const handleSaveChanges = async () => {
+    // Update the inputs that changed
+    updateUserDetails(
+      profilePictureChanged,
+      displayNameChanged,
+      emailChanged,
+      null
+    );
+
+    setProfilePictureChanged(false);
+    setDisplayNameChanged(false);
+    setEmailChanged(false);
+
     setIsEditMode(false);
   };
 
@@ -115,11 +120,11 @@ function ProfilePage() {
         <form>
           <Stack spacing={2} alignItems="center">
             <Avatar
-              alt="Profile Picture"
+              alt="?"
               src={profilePicture ? profilePicture : undefined} // Display the profile picture if it exists
               sx={{ width: 100, height: 100 }}
             >
-              {profilePicture ? null : <ImageIcon fontSize="large" />} {/* Display the icon only if there is no profile picture */}
+              {/* Display the icon only if there is no profile picture */}
             </Avatar>
             {isEditMode ? (
               <>
@@ -138,8 +143,8 @@ function ProfilePage() {
               </>
             ) : null}
             <TextField
-              label="Displayed Name"
-              value={displayName}
+              label="Display Name"
+              value={displayNameField}
               onChange={handleDisplayNameChange}
               variant="outlined"
               disabled={!isEditMode}
@@ -147,7 +152,7 @@ function ProfilePage() {
             <TextField
               label="Email"
               type="email"
-              value={email}
+              value={emailField}
               onChange={handleEmailChange}
               variant="outlined"
               disabled={!isEditMode}
@@ -174,14 +179,14 @@ function ProfilePage() {
           </Stack>
         </form>
       ) : (
-      <Button
-        type="button"
-        variant="contained"
-        color="primary"
-        onClick={handleEditProfile}
-      >
-        Edit Profile
-      </Button>
+        <Button
+          type="button"
+          variant="contained"
+          color="primary"
+          onClick={handleEditProfile}
+        >
+          Edit Profile
+        </Button>
       )}
       <BottomNavigation
         value={selectedTab}
