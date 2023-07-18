@@ -36,7 +36,7 @@ function App() {
                   <Route path="/home" element={<HomePage />}></Route>
                   <Route path="/about" element={<AboutPage />}></Route>
                   <Route path="/friends" element={<FriendsPage />}></Route>
-                  <Route path="/profile" element={<ProfilePage />}></Route>
+                  <Route path="/profile/:u" element={<ProfilePage />}></Route>
                 </Route>
               </Route>
 

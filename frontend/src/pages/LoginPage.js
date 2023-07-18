@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -28,9 +28,11 @@ function LoginPage() {
   const { user, loginUser } = useContext(AuthContext);
 
   // If user is already logged in, redirect to homepage
-  if (user) {
-    navigate("/home");
-  }
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);

@@ -297,8 +297,9 @@ def random_options(expr, n):
                     newconstant = num+random.randint(-1*r, r)
                 options[i] = option.subs(num, newconstant)
             # Check if any pairs of options are (structurally) equivalent
-            # as we want n distinct options
+            # as we want n+1 distinct options
         distinct = True
+        options.append(expr)
         for i in range(0, n):
             for j in range(i+1, n):
                 if (options[i] == options[j]):

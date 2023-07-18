@@ -42,7 +42,7 @@ function NavBar() {
   };
   const handleProfileButton = () => {
     handleCloseUserMenu();
-    navigate("/profile");
+    navigate(`/profile/${user.username}`);
   };
   const handleLogoutButton = () => {
     handleCloseUserMenu();
