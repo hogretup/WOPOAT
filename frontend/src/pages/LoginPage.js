@@ -68,7 +68,7 @@ function LoginPage() {
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom>
-            QUIZICALC
+            QUIZZICALC
           </Typography>
           <Box
             component="form"
