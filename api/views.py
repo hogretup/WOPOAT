@@ -15,9 +15,8 @@ from .quiz_scripts import scripts
 from .models import CompletedQuiz, FriendRequest, UserProfile
 from .serializers import CompletedQuizSerializer, UserProfileSerializer, FriendRequestSerializer
 
+
 # path: api/generateQuiz/<str:topic>/<int:difficulty>
-
-
 @api_view(['GET'])
 def generateQuiz(request, topic, difficulty):
     # Currently just generates a quiz with 5 qns
@@ -73,14 +72,26 @@ def getRecentQuizzes(request):
 @ permission_classes([IsAuthenticated])
 def getUserProfile(request):
     """
-    Returns the User Profile with user information
+    Returns the UserProfile with user information
     """
     friends = request.user.myprofile.friends.all()
     serializer = UserProfileSerializer(request.user.myprofile)
     return Response(serializer.data)
 
 
-# path: api/updateUserDetails
+# path: api/getUserProfileByUsername/<str:username>
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
+def getUserProfileByUsername(request, username):
+    """
+    Returns the UserProfile of user specified by username in params
+    """
+    data = request.data
+    user = User.objects.get(username=username)
+    serializer = UserProfileSerializer(user.myprofile)
+    return Response(serializer.data)
+
+
 @ api_view(['POST'])
 @ permission_classes([IsAuthenticated])
 def updateUserDetails(request):
