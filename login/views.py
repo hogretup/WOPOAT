@@ -44,6 +44,7 @@ def signup(request):
     UserProfile.objects.create(
         user=myuser,
         displayName=username,
+        username=username,
     )
 
     return JsonResponse({'message': 'User created successfully!'})

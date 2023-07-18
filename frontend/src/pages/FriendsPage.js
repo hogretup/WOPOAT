@@ -19,6 +19,7 @@ import {
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AuthContext from "../context/AuthContext";
 import UserContext from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 function FriendsPage() {
   const [friendUsername, setFriendUsername] = useState("");
@@ -211,7 +212,13 @@ function FriendsPage() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
                         <Avatar
                           alt="?"
                           src={
@@ -221,9 +228,9 @@ function FriendsPage() {
                           }
                           sx={{ marginRight: "12px" }}
                         />
-                        <Typography variant="h6">
+                        <Link to={`/profile/${friend.username}`}>
                           {friend.displayName}
-                        </Typography>
+                        </Link>
                       </Box>
                     </TableCell>
                   </TableRow>

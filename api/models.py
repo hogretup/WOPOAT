@@ -27,6 +27,7 @@ def upload_to(instance, filename):
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="myprofile", on_delete=models.CASCADE)
+    username = models.TextField(null=True)
     friends = models.ManyToManyField(
         User, related_name="friends", blank=True)
     email = models.EmailField(null=True)
