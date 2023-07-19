@@ -56,11 +56,14 @@ function QuizTable(props) {
   // Handling viewing of past quizzes
   const navigate = useNavigate();
   const handleViewQuiz = async (completedQuiz) => {
+    console.log(completedQuiz);
+    let quiz = completedQuiz.quiz;
     navigate("/quiz", {
       state: {
-        quiz: completedQuiz,
-        topic: completedQuiz.topic,
-        difficulty: completedQuiz.difficulty,
+        quiz: quiz,
+        topic: quiz.topic,
+        difficulty: quiz.difficulty,
+        time: completedQuiz.time,
         completed: true,
       },
     });
@@ -123,7 +126,7 @@ function QuizTable(props) {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleViewQuiz(item.quiz)}
+                    onClick={() => handleViewQuiz(item)}
                     disabled={!item.quiz}
                   >
                     View

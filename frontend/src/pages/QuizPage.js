@@ -13,15 +13,13 @@ import {
   Button,
   Chip,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import AuthContext from "../context/AuthContext";
-
 import Confetti from "../components/Confetti";
 
 function QuizPage() {
   // Getting props
   const location = useLocation();
-  let { quiz, topic, difficulty, completed } = location.state;
+  let { quiz, topic, difficulty, completed, time } = location.state;
 
   // Quiz submission variables
   const [selectedOptions, setSelectedOptions] = useState(() =>
@@ -94,11 +92,6 @@ function QuizPage() {
     });
   };
 
-  // Timer logic (make into a component)
-  const [timerRunning, setTimerRunning] = useState(true);
-  const [seconds, setSeconds] = useState(0);
-  const [time, setTime] = useState(`00:00`);
-
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -109,12 +102,18 @@ function QuizPage() {
     return `${formattedMinutes}:${formattedSeconds}`;
   };
 
+  // Timer logic (make into a component)
+  const [timerRunning, setTimerRunning] = useState(!completed);
+  const [seconds, setSeconds] = useState(completed ? time : 0);
+  const [displayTime, setDisplayTime] = useState(
+    completed ? formatTime(time) : "00:00"
+  );
   useEffect(() => {
     let interval;
     if (timerRunning) {
       interval = setInterval(() => {
         setSeconds((prev) => prev + 1);
-        setTime(formatTime(seconds));
+        setDisplayTime(formatTime(seconds));
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -181,7 +180,7 @@ function QuizPage() {
         </Paper>
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Chip
-            label={time}
+            label={displayTime}
             color="success"
             variant={submitted || completed ? "filled" : "outlined"}
           />

@@ -49,6 +49,7 @@ function HomePage() {
         topic: topic,
         difficulty: difficulty,
         completed: false,
+        time: null,
       },
     }); // Passes the props to QuizPage.js
   };
@@ -78,6 +79,7 @@ function HomePage() {
           topic: quiz.topic,
           difficulty: quiz.difficulty,
           completed: false,
+          time: null,
         },
       }); // Passes the props to QuizPage.js
     } else {
@@ -115,7 +117,6 @@ function HomePage() {
       // Not sure when response would fail
       if (response.status === 200) {
         setquizHistory(data);
-        setCopied(Array(data.length).fill(false));
       } else if (response.statusText === "Unauthorized") {
         logoutUser();
       }
