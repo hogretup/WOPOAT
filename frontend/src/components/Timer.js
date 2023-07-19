@@ -1,7 +1,10 @@
+// --------------- UNUSED ---------------
+
 import { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Chip } from "@mui/material";
 
 function Timer() {
+  const [isRunning, setIsRunning] = useState(true);
   const [seconds, setSeconds] = useState(0);
   const [time, setTime] = useState(`00:00`);
 
@@ -16,17 +19,31 @@ function Timer() {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((prevSeconds) => prevSeconds + 1);
-      setTime(formatTime(seconds));
-      console.log(seconds);
-      console.log(time);
-    }, 1000);
-
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+        setTime(formatTime(seconds));
+        console.log(seconds);
+        console.log(time);
+      }, 1000);
+    }
     return () => clearInterval(interval);
-  }, []);
+  }, [seconds, isRunning]);
 
-  return <Typography variant="h4">{time}</Typography>;
+  const handleStart = () => {
+    if (!isRunning) {
+      setIsRunning(true);
+    }
+  };
+
+  const handleStop = () => {
+    if (isRunning) {
+      setIsRunning(false);
+    }
+  };
+
+  return <Chip label={time} color="primary" variant="outlined" />;
 }
 
 export default Timer;

@@ -70,9 +70,6 @@ function HomePage() {
       day: "2-digit",
       month: "2-digit",
       year: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
     };
 
     // Converts to runtime's default timezone
@@ -176,6 +173,7 @@ function HomePage() {
       if (response.status === 200) {
         setquizHistory(data);
         setCopied(Array(data.length).fill(false));
+        console.log(quizHistory);
       } else if (response.statusText === "Unauthorized") {
         logoutUser();
       }
@@ -237,7 +235,9 @@ function HomePage() {
         elevation={3}
         style={{ marginTop: "2rem", marginBottom: "2rem", padding: 8 }}
       >
-        <Typography variant="h6">Got a quiz seed?</Typography>
+        <Typography variant="body1" gutterBottom>
+          Got a quiz seed?
+        </Typography>
         <form onSubmit={handleSubmitSeed}>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
@@ -262,55 +262,68 @@ function HomePage() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Topic</TableCell>
-              <TableCell align="right">Difficulty</TableCell>
-              <TableCell align="right">Score</TableCell>
-              <TableCell align="right">Date/Time</TableCell>
-              <TableCell align="right">Seed</TableCell>
-              <TableCell align="right"></TableCell>
+              {quizHistory.length === 0 ? (
+                <TableCell>
+                  You have not completed any quizzes yet. Try one to view your
+                  quiz history!
+                </TableCell>
+              ) : (
+                <>
+                  <TableCell>Topic</TableCell>
+                  <TableCell align="right">Difficulty</TableCell>
+                  <TableCell align="right">Score</TableCell>
+                  <TableCell align="right">Date</TableCell>
+                  <TableCell align="right">Seed</TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {quizHistory.map((item, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {item.topic}
-                </TableCell>
-                <TableCell align="right">{item.difficulty}</TableCell>
-                <TableCell align="right">
-                  {item.score + "/" + item.maxscore}
-                </TableCell>
-                <TableCell align="right">{convertTime(item.created)}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    size="small"
-                    edge="start"
-                    color="inherit"
-                    onClick={() => handleCopyToClipBoard(item.seed, index)}
-                  >
-                    {copied[index] ? (
-                      <p style={{ fontSize: "12px" }}>Copied!</p>
-                    ) : (
-                      <ContentPasteIcon />
-                    )}
-                  </IconButton>
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleViewQuiz(item.quiz)}
-                    disabled={!item.quiz}
-                  >
-                    View
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {quizHistory.length > 0 && (
+            <TableBody>
+              {quizHistory.map((item, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {item.topic}
+                  </TableCell>
+                  <TableCell align="right">{item.difficulty}</TableCell>
+                  <TableCell align="right">
+                    {item.score + "/" + item.maxscore}
+                  </TableCell>
+                  <TableCell align="right">
+                    {convertTime(item.created)}
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      size="small"
+                      edge="start"
+                      color="inherit"
+                      onClick={() => handleCopyToClipBoard(item.seed, index)}
+                    >
+                      {copied[index] ? (
+                        <p style={{ fontSize: "12px" }}>Copied!</p>
+                      ) : (
+                        <ContentPasteIcon />
+                      )}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleViewQuiz(item.quiz)}
+                      disabled={!item.quiz}
+                    >
+                      View
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
     </Container>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MathComponent } from "mathjax-react";
 import {
@@ -11,12 +11,12 @@ import {
   Typography,
   Radio,
   Button,
+  Chip,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import AuthContext from "../context/AuthContext";
 
 import Confetti from "../components/Confetti";
-import Timer from "../components/Timer";
 
 function QuizPage() {
   // Getting props
@@ -57,6 +57,7 @@ function QuizPage() {
   const handleSubmit = (event) => {
     setSubmitted(true);
     setConfettiVisible(true);
+    setTimerRunning(false);
 
     let score = 0;
     for (let i = 0; i < quiz.qns.length; ++i) {
@@ -91,6 +92,34 @@ function QuizPage() {
       }),
     });
   };
+
+  // Timer logic (make into a component)
+  const [timerRunning, setTimerRunning] = useState(true);
+  const [seconds, setSeconds] = useState(0);
+  const [time, setTime] = useState(`00:00`);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
+
+  useEffect(() => {
+    let interval;
+    if (timerRunning) {
+      interval = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+        setTime(formatTime(seconds));
+        console.log(seconds);
+        console.log(time);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [seconds, timerRunning]);
 
   return (
     <Container maxWidth="sm">
@@ -151,30 +180,36 @@ function QuizPage() {
             ))}
           </Stack>
         </Paper>
-        <Box display="flex" justifyContent="flex-start"></Box>
-        <Box display="flex" justifyContent="flex-end">
-          <Button
-            variant="contained"
+        <Box display="flex" justifyContent="space-between" mb={3}>
+          <Chip
+            label={time}
             color="primary"
-            disabled={activeQn === quiz.qns.length - 1}
-            sx={{ mr: "1rem" }}
-            onClick={handleNext}
-          >
-            Next
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={
-              ![...Array(quiz.qns.length).keys()].every(
-                (index) => index in selectedOptions
-              ) || submitted
-            }
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
-          {confettiVisible && <Confetti />}
+            variant={completed ? "filled" : "outlined"}
+          />
+          <Box display="flex" justifyContent="flex-start">
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={activeQn === quiz.qns.length - 1}
+              sx={{ mr: "1rem" }}
+              onClick={handleNext}
+            >
+              Next
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={
+                ![...Array(quiz.qns.length).keys()].every(
+                  (index) => index in selectedOptions
+                ) || submitted
+              }
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+            {confettiVisible && <Confetti />}
+          </Box>
         </Box>
       </Stack>
     </Container>

@@ -307,7 +307,6 @@ def random_options(expr, n):
         if distinct:
             break
 
-    options.append(expr)
     random.shuffle(options)
     return options, options.index(expr)
 
