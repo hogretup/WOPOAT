@@ -23,4 +23,6 @@ urlpatterns = [
     path('updateUserDetails', views.updateUserDetails, name="updateUserDetails"),
     path('getUserProfileByUsername/<str:username>',
          views.getUserProfileByUsername, name='getUserProfileByUsername'),
+    path('getCompletedQuizStats/<str:username>',
+         views.getCompletedQuizStats, name='getCompletedQuizStats')
 ]

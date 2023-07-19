@@ -89,6 +89,7 @@ function QuizPage() {
         maxscore: maxscore,
         seed: quiz.seed,
         quiz: quiz,
+        time: seconds,
       }),
     });
   };
@@ -114,8 +115,6 @@ function QuizPage() {
       interval = setInterval(() => {
         setSeconds((prev) => prev + 1);
         setTime(formatTime(seconds));
-        console.log(seconds);
-        console.log(time);
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -183,8 +182,8 @@ function QuizPage() {
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Chip
             label={time}
-            color="primary"
-            variant={completed ? "filled" : "outlined"}
+            color="success"
+            variant={submitted || completed ? "filled" : "outlined"}
           />
           <Box display="flex" justifyContent="flex-start">
             <Button

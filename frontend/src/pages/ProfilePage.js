@@ -33,6 +33,11 @@ function ProfilePage() {
   // Auth context
   let { user, authTokens, logoutUser } = useContext(AuthContext);
 
+  // Quiz stats
+  const [numExpand, setNumExpand] = useState(0);
+  const [numFactorise, setNumFactorise] = useState(0);
+  const [top3, setTop3] = useState([]); // List of top 3 quiz attempts (Ranked by Score > Difficulty > Timing)
+
   useEffect(() => {
     setProfileUser(null);
     setMyProfile(false);
@@ -43,8 +48,26 @@ function ProfilePage() {
       // Fetches user profile information
       fetchUserProfileByUsername(u);
     }
+    // Fetches quiz stats
+    fetchQuizStats(u);
   }, [u]);
 
+  const fetchQuizStats = async (username) => {
+    const response = await fetch(`api/getCompletedQuizStats/${username}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + String(authTokens?.access),
+      },
+    });
+
+    const data = await response.json();
+    if (response.status === 200) {
+      console.log(data);
+      setNumExpand(data.numExpand);
+      setNumFactorise(data["numFactorise"]);
+      setTop3(data["top3"]);
+    }
+  };
   const fetchUserProfileByUsername = async (username) => {
     const response = await fetch(`api/getUserProfileByUsername/${username}`, {
       method: "GET",
@@ -79,7 +102,7 @@ function ProfilePage() {
   const [emailChanged, setEmailChanged] = useState(false);
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("profile");
+  // const [selectedTab, setSelectedTab] = useState("profile");
   const [quizHistory, setquizHistory] = useState([]);
 
   // Updates MY PROFILE details in backend, and refreshes data
@@ -138,7 +161,7 @@ function ProfilePage() {
 
   const handleEditProfile = () => {
     setIsEditMode(true);
-    setSelectedTab("profile");
+    // setSelectedTab("profile");
   };
 
   const handleSaveChanges = async () => {
@@ -157,9 +180,10 @@ function ProfilePage() {
     setIsEditMode(false);
   };
 
+  /*
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
-  };
+  };*/
 
   // if profile does not exist
   if (profileUser === null) {
@@ -191,92 +215,123 @@ function ProfilePage() {
           minHeight: "100vh",
         }}
       >
-        {selectedTab === "profile" ? (
-          <form>
-            <Stack spacing={2} alignItems="center">
-              <Avatar
-                alt="?"
-                src={
-                  myProfile
+        <form>
+          <Stack spacing={2} alignItems="center">
+            <Avatar
+              alt="?"
+              src={
+                myProfile
+                  ? profilePicture
                     ? profilePicture
-                      ? profilePicture
-                      : undefined
-                    : fProfilePicture
-                    ? fProfilePicture
                     : undefined
-                } // Display the profile picture if it exists
-                sx={{ width: 100, height: 100 }}
-              >
-                {/* Display the icon only if there is no profile picture */}
-              </Avatar>
-              {isEditMode && (
-                <>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    id="profile-picture-upload"
-                    style={{ display: "none" }}
-                    onChange={handleProfilePictureChange}
-                  />
-                  <label htmlFor="profile-picture-upload">
-                    <Button
-                      variant="contained"
-                      component="span"
-                      color="primary"
-                    >
-                      Upload Photo
-                    </Button>
-                  </label>
-                </>
-              )}
-              {myProfile ? (
-                <TextField
-                  label="Display Name"
-                  value={displayNameField}
-                  onChange={handleDisplayNameChange}
-                  variant="outlined"
-                  disabled={!myProfile || !isEditMode}
+                  : fProfilePicture
+                  ? fProfilePicture
+                  : undefined
+              } // Display the profile picture if it exists
+              sx={{ width: 100, height: 100 }}
+            >
+              {/* Display the icon only if there is no profile picture */}
+            </Avatar>
+            {isEditMode && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="profile-picture-upload"
+                  style={{ display: "none" }}
+                  onChange={handleProfilePictureChange}
                 />
-              ) : (
-                <Typography variant="h6">{fDisplayName}</Typography>
-              )}
+                <label htmlFor="profile-picture-upload">
+                  <Button variant="contained" component="span" color="primary">
+                    Upload Photo
+                  </Button>
+                </label>
+              </>
+            )}
+            {myProfile ? (
+              <TextField
+                label="Display Name"
+                value={displayNameField}
+                onChange={handleDisplayNameChange}
+                variant="outlined"
+                disabled={!myProfile || !isEditMode}
+              />
+            ) : (
+              <Typography variant="h6">{fDisplayName}</Typography>
+            )}
 
-              {myProfile && (
-                <TextField
-                  label="Email"
-                  type="email"
-                  value={emailField}
-                  onChange={handleEmailChange}
-                  variant="outlined"
-                  disabled={!myProfile || !isEditMode}
-                />
-              )}
-              {myProfile &&
-                (isEditMode ? (
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSaveChanges}
-                  >
-                    Save Changes
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleEditProfile}
-                  >
-                    Edit Profile
-                  </Button>
-                ))}
-            </Stack>
-          </form>
-        ) : (
-          ""
-        )}
-        <BottomNavigation
+            {myProfile && (
+              <TextField
+                label="Email"
+                type="email"
+                value={emailField}
+                onChange={handleEmailChange}
+                variant="outlined"
+                disabled={!myProfile || !isEditMode}
+              />
+            )}
+            {myProfile &&
+              (isEditMode ? (
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSaveChanges}
+                >
+                  Save Changes
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleEditProfile}
+                >
+                  Edit Profile
+                </Button>
+              ))}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                p: 1,
+                marginTop: "10px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h2" color="dodgerblue">
+                  {numExpand}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  Expand
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h2" color="teal">
+                  {numFactorise}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  Factorise
+                </Typography>
+              </Box>
+            </Box>
+          </Stack>
+        </form>
+        {/* <BottomNavigation
           value={selectedTab}
           onChange={handleTabChange}
           sx={{ width: "100%", position: "fixed", bottom: 0 }}
@@ -291,7 +346,7 @@ function ProfilePage() {
             value="history"
             icon={<HistoryIcon />}
           />
-        </BottomNavigation>
+        </BottomNavigation>*/}
       </Box>
     </Container>
   );

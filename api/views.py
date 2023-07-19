@@ -43,7 +43,8 @@ def updateQuizHistory(request):
         score=data['score'],
         maxscore=data['maxscore'],
         seed=data['seed'],
-        quiz=data['quiz']
+        quiz=data['quiz'],
+        time=data['time'],
     )
 
     serializer = CompletedQuizSerializer(cq, many=False)
@@ -64,7 +65,8 @@ def getRecentQuizzes(request):
     serializer = CompletedQuizSerializer(last_ten, many=True)
     return Response(serializer.data)
 
-# -------------------- Friends --------------------
+
+# -------------------- Friends/Profile --------------------
 
 
 # path: api/getUserProfile
@@ -86,10 +88,27 @@ def getUserProfileByUsername(request, username):
     """
     Returns the UserProfile of user specified by username in params
     """
-    data = request.data
     user = User.objects.get(username=username)
     serializer = UserProfileSerializer(user.myprofile)
     return Response(serializer.data)
+
+
+# path: api/getCompletedQuizStats/<str:username>
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
+def getCompletedQuizStats(request, username):
+    """
+    Returns a dict containing number of Expand, Factorise quizzes completed by user,
+    as well as their top 3 quizzes (Score > Difficulty > Timing)
+    """
+    user = User.objects.get(username=username)
+    top_3_quizzes = user.completedquiz_set.all().order_by(
+        '-score', '-difficulty', '-time')[:3]
+    numExpand = user.completedquiz_set.all().filter(topic="Expand").count()
+    numFactorise = user.completedquiz_set.all().filter(topic="factorise").count()
+    data = {"top3": CompletedQuizSerializer(
+        top_3_quizzes, many=True).data, "numExpand": numExpand, "numFactorise": numFactorise}
+    return Response(data)
 
 
 @ api_view(['POST'])

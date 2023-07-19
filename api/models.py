@@ -14,6 +14,9 @@ class CompletedQuiz(models.Model):
     seed = models.TextField(null=True, blank=True)
     quiz = models.JSONField(null=True, blank=True)
 
+    # time quiz was completed (in seconds)
+    time = models.IntegerField(null=True, blank=True)
+
     def __str__(self):
         return f"Topic: {self.topic}, Difficulty: {self.difficulty}, Score: {self.score}, Maxscore: {self.maxscore}"
 
