@@ -15,13 +15,15 @@ import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../context/AuthContext";
 import UserContext from "../context/UserContext";
+import AvatarEXP from "../components/AvatarEXP";
+import { EXPpercentage } from "../utils/EXP.js";
 
 function NavBar() {
   // Auth Context
   let { user, logoutUser } = useContext(AuthContext);
 
   // User Context
-  let { displayName, profilePicture } = useContext(UserContext);
+  let { displayName, profilePicture, level, EXP } = useContext(UserContext);
 
   // Can consider making basic Menu button a component
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -99,7 +101,11 @@ function NavBar() {
             <Typography variant="h6" sx={{ marginRight: "4px" }}>
               {displayName}
             </Typography>
-            <Avatar alt="?" src={profilePicture ? profilePicture : undefined} />
+            <AvatarEXP
+              avatarSrc={profilePicture ? profilePicture : undefined}
+              expPercentage={EXPpercentage(level, EXP)}
+              level={level}
+            />
           </IconButton>
           <Menu
             id="user-menu"

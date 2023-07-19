@@ -12,9 +12,15 @@ import {
   Radio,
   Button,
   Chip,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 import Confetti from "../components/Confetti";
+import UserContext from "../context/UserContext";
+import { progress } from "../utils/EXP.js";
 
 function QuizPage() {
   // Getting props
@@ -68,12 +74,23 @@ function QuizPage() {
     addToHistory(score, quiz.qns.length);
   };
 
-  // User context
+  // Auth context
   let { authTokens } = useContext(AuthContext);
+
+  // User context
+  let { level, EXP, refreshProfileData } = useContext(UserContext);
 
   // Adds completed quiz to quiz history
   const addToHistory = async (score, maxscore) => {
     quiz.selectedOptions = selectedOptions;
+
+    // Calculating next level and EXP
+    const { nextLevel, nextEXP } = progress(level, EXP, score, difficulty);
+    if (nextLevel > level) {
+      setOpen(true);
+    }
+
+    // Updates history and user EXP
     await fetch(`/api/quiz/updateHistory`, {
       method: "POST",
       headers: {
@@ -88,8 +105,11 @@ function QuizPage() {
         seed: quiz.seed,
         quiz: quiz,
         time: seconds,
+        level: nextLevel,
+        EXP: nextEXP,
       }),
     });
+    refreshProfileData();
   };
 
   const formatTime = (seconds) => {
@@ -119,8 +139,19 @@ function QuizPage() {
     return () => clearInterval(interval);
   }, [seconds, timerRunning]);
 
+  // Level up dialog
+  const [open, setOpen] = useState(false);
+
   return (
     <Container maxWidth="sm">
+      <Dialog onClose={() => setOpen(false)} open={open}>
+        <DialogTitle>Congratulations!</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You have reached level {level}. Keep it up!
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
       <Stack direction="column" spacing={2} sx={{ mt: "3rem" }}>
         <Box display="flex" justifyContent="center">
           <ToggleButtonGroup

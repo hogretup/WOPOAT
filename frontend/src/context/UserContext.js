@@ -13,6 +13,8 @@ export const UserProvider = ({ children }) => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [friendsList, setFriendsList] = useState([]);
+  const [level, setLevel] = useState(0);
+  const [EXP, setEXP] = useState(0);
 
   // Fetch initial profile info, and refresh whenever user changes
   useEffect(() => {
@@ -34,6 +36,8 @@ export const UserProvider = ({ children }) => {
         setProfilePicture(data.profile_image);
         setDisplayName(data.displayName);
         setEmail(data.email);
+        setLevel(data.level);
+        setEXP(data.EXP);
       } else if (response.statusText === "Unauthorized") {
         logoutUser();
       }
@@ -67,6 +71,8 @@ export const UserProvider = ({ children }) => {
     displayName: displayName,
     email: email,
     friendsList: friendsList,
+    level: level,
+    EXP: EXP,
     refreshProfileData: refreshProfileData,
   };
 

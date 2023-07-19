@@ -8,16 +8,13 @@ import {
   Button,
   Stack,
   Avatar,
-  BottomNavigation,
-  BottomNavigationAction,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
   Container,
+  Divider,
 } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 import UserContext from "../context/UserContext";
+import QuizTable from "../components/QuizTable";
+import AvatarEXP from "../components/AvatarEXP";
 import { useParams } from "react-router-dom";
 
 function ProfilePage() {
@@ -62,10 +59,9 @@ function ProfilePage() {
 
     const data = await response.json();
     if (response.status === 200) {
-      console.log(data);
       setNumExpand(data.numExpand);
-      setNumFactorise(data["numFactorise"]);
-      setTop3(data["top3"]);
+      setNumFactorise(data.numFactorise);
+      setTop3(data.top3);
     }
   };
   const fetchUserProfileByUsername = async (username) => {
@@ -212,13 +208,12 @@ function ProfilePage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          minHeight: "100vh",
+          padding: "20px",
         }}
       >
         <form>
-          <Stack spacing={2} alignItems="center">
+          <Stack sx={{ marginTop: "20px" }} spacing={2} alignItems="center">
             <Avatar
-              alt="?"
               src={
                 myProfile
                   ? profilePicture
@@ -227,11 +222,9 @@ function ProfilePage() {
                   : fProfilePicture
                   ? fProfilePicture
                   : undefined
-              } // Display the profile picture if it exists
+              }
               sx={{ width: 100, height: 100 }}
-            >
-              {/* Display the icon only if there is no profile picture */}
-            </Avatar>
+            />
             {isEditMode && (
               <>
                 <input
@@ -290,11 +283,10 @@ function ProfilePage() {
                   Edit Profile
                 </Button>
               ))}
-            <Box
+            <Stack
+              direction="row"
+              spacing={2}
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                p: 1,
                 marginTop: "10px",
               }}
             >
@@ -328,6 +320,14 @@ function ProfilePage() {
                   Factorise
                 </Typography>
               </Box>
+            </Stack>
+
+            <Box style={{ textAlign: "center" }}>
+              <Divider variant="middle" />
+              <Typography sx={{ marginTop: 1 }} variant="body1" color="primary">
+                Top 3 Attempts
+              </Typography>
+              <QuizTable quizzes={top3} />
             </Box>
           </Stack>
         </form>

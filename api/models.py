@@ -37,6 +37,8 @@ class UserProfile(models.Model):
     profile_image = models.ImageField(
         null=True, blank='True', upload_to=upload_to)
     displayName = models.TextField(null=True)
+    level = models.IntegerField(null=True, blank=True)
+    EXP = models.IntegerField(null=True, blank=True)
 
 
 class FriendRequest(models.Model):

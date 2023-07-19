@@ -20,6 +20,8 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AuthContext from "../context/AuthContext";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
+import { EXPpercentage } from "../utils/EXP";
+import AvatarEXP from "../components/AvatarEXP";
 
 function FriendsPage() {
   const [friendUsername, setFriendUsername] = useState("");
@@ -212,26 +214,29 @@ function FriendsPage() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Box
+                      <Stack
+                        direction="row"
+                        spacing={2}
                         sx={{
-                          display: "flex",
-                          flexDirection: "row",
                           alignItems: "center",
                         }}
                       >
-                        <Avatar
-                          alt="?"
-                          src={
+                        <AvatarEXP
+                          avatarSrc={
                             friend.profile_image
                               ? friend.profile_image
                               : undefined
                           }
-                          sx={{ marginRight: "12px" }}
+                          expPercentage={EXPpercentage(
+                            friend.level,
+                            friend.EXP
+                          )}
+                          level={friend.level}
                         />
                         <Link to={`/profile/${friend.username}`}>
                           {friend.displayName}
                         </Link>
-                      </Box>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}

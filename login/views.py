@@ -45,6 +45,8 @@ def signup(request):
         user=myuser,
         displayName=username,
         username=username,
+        level=1,
+        EXP=0,
     )
 
     return JsonResponse({'message': 'User created successfully!'})

@@ -47,6 +47,12 @@ def updateQuizHistory(request):
         time=data['time'],
     )
 
+    # Update users' level and EXP
+    userprofile = this_user.myprofile
+    userprofile.level = data['level']
+    userprofile.EXP = data['EXP']
+    userprofile.save()
+
     serializer = CompletedQuizSerializer(cq, many=False)
     return Response(serializer.data)
 
@@ -105,7 +111,7 @@ def getCompletedQuizStats(request, username):
     top_3_quizzes = user.completedquiz_set.all().order_by(
         '-score', '-difficulty', '-time')[:3]
     numExpand = user.completedquiz_set.all().filter(topic="Expand").count()
-    numFactorise = user.completedquiz_set.all().filter(topic="factorise").count()
+    numFactorise = user.completedquiz_set.all().filter(topic="Factorise").count()
     data = {"top3": CompletedQuizSerializer(
         top_3_quizzes, many=True).data, "numExpand": numExpand, "numFactorise": numFactorise}
     return Response(data)

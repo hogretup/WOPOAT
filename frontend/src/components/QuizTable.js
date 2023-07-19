@@ -70,8 +70,8 @@ function QuizTable(props) {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ mb: "2rem" }}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer component={Paper} sx={{ mb: "2rem", maxWidth: 650 }}>
+      <Table size="small" aria-label="simple table">
         <TableHead>
           <TableRow>
             {quizzes.length === 0 ? (

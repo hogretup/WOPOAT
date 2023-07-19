@@ -10,6 +10,7 @@ import {
   Paper,
   TextField,
   Typography,
+  Box,
 } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 import QuizTable from "../components/QuizTable";
@@ -200,8 +201,9 @@ function HomePage() {
           {wrongSeed ? "Invalid seed" : ""}
         </form>
       </Paper>
-
-      <QuizTable quizzes={quizHistory} />
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <QuizTable quizzes={quizHistory} />
+      </Box>
     </Container>
   );
 }
