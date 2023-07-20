@@ -145,10 +145,12 @@ function QuizPage() {
   return (
     <Container maxWidth="sm">
       <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle>Congratulations!</DialogTitle>
+        <DialogTitle>
+          <Typography variant="h6">Congratulations! 🏆</Typography>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You have reached level {level}. Keep it up!
+            You have reached Level {level}. Keep it up!
           </DialogContentText>
         </DialogContent>
       </Dialog>
