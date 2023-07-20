@@ -1,4 +1,4 @@
-// Exp earned = difficulty*score*10
+// Exp earned = difficulty*score*20
 
 // Calculates cumulative exp given level i.e. lvl 1 has 0 cumulative exp, lvl 2 has 50 cumulative exp, lvl 3 has 150, etc.
 export function LevelToEXP(level) {
@@ -24,10 +24,8 @@ export function EXPToLevel(EXP) {
 
 // Given current level, EXP, and score + difficulty of quiz completed, return new level and EXP
 export function progress(currLevel, currEXP, score, difficulty) {
-  let EXPgained = score * difficulty * 10;
-  console.log(EXPgained);
+  let EXPgained = score * difficulty * 20;
   let cumulativeEXP = LevelToEXP(currLevel) + currEXP + EXPgained;
-  console.log(cumulativeEXP);
   let nxtLevel = EXPToLevel(cumulativeEXP);
   let nxtEXP = cumulativeEXP - LevelToEXP(nxtLevel);
   return { nextLevel: nxtLevel, nextEXP: nxtEXP };
