@@ -330,7 +330,7 @@ function ProfilePage() {
               <Typography sx={{ marginTop: 1 }} variant="body1" color="primary">
                 Top 3 Attempts
               </Typography>
-              <QuizTable quizzes={top3} />
+              <QuizTable quizzes={top3} ranking={true} />
             </Box>
           </Stack>
         </form>

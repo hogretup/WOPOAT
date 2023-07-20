@@ -202,7 +202,7 @@ function HomePage() {
         </form>
       </Paper>
       <Box display="flex" justifyContent="center" alignItems="center">
-        <QuizTable quizzes={quizHistory} />
+        <QuizTable quizzes={quizHistory} ranking={false} />
       </Box>
     </Container>
   );

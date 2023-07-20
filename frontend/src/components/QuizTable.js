@@ -13,8 +13,12 @@ import {
 } from "@mui/material";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 
-function QuizTable(props) {
-  const { quizzes } = props;
+function QuizTable({ quizzes, ranking }) {
+  // Quizzes is an array of quizzes
+  // ranking = true means we want the top3 quiz table (with medals)
+
+  const medals = ["\u{1F947}", "\u{1F948}", "\u{1F949}"];
+
   // Handling "Copied!" message after copying seed to clipboard
   const [copied, setCopied] = useState([]);
   const handleCopyToClipBoard = async (seed, index) => {
@@ -100,7 +104,7 @@ function QuizTable(props) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {item.topic}
+                  {ranking ? medals[index] + item.topic : item.topic}
                 </TableCell>
                 <TableCell align="right">{item.difficulty}</TableCell>
                 <TableCell align="right">
