@@ -127,7 +127,7 @@ function HomePage() {
   }, []);
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       <Paper
         elevation={3}
         style={{ marginTop: "2rem", marginBottom: "2rem", padding: 8 }}

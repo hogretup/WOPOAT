@@ -232,6 +232,7 @@ function FriendsPage() {
                             friend.EXP
                           )}
                           level={friend.level}
+                          size="small"
                         />
                         <Link to={`/profile/${friend.username}`}>
                           {friend.displayName}

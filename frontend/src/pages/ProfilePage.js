@@ -15,6 +15,7 @@ import AuthContext from "../context/AuthContext";
 import UserContext from "../context/UserContext";
 import QuizTable from "../components/QuizTable";
 import AvatarEXP from "../components/AvatarEXP";
+import { EXPpercentage } from "../utils/EXP.js";
 import { useParams } from "react-router-dom";
 
 function ProfilePage() {
@@ -78,6 +79,8 @@ function ProfilePage() {
       setfProfilePicture(data.profile_image);
       setfDisplayName(data.displayName);
       setfEmail(data.email);
+      setfLevel(data.level);
+      setfEXP(data.EXP);
     }
   };
 
@@ -85,9 +88,11 @@ function ProfilePage() {
   const [fProfilePicture, setfProfilePicture] = useState(null);
   const [fDisplayName, setfDisplayName] = useState("");
   const [fEmail, setfEmail] = useState("");
+  const [fLevel, setfLevel] = useState(0);
+  const [fEXP, setfEXP] = useState(0);
 
   // MY PROFILE info from backendUser context (with actual profile info from backend)
-  let { profilePicture, displayName, email, refreshProfileData } =
+  let { profilePicture, displayName, email, level, EXP, refreshProfileData } =
     useContext(UserContext);
 
   // MY PROFILE info fields filled in
@@ -213,7 +218,7 @@ function ProfilePage() {
       >
         <form>
           <Stack sx={{ marginTop: "20px" }} spacing={2} alignItems="center">
-            <Avatar
+            <AvatarEXP
               src={
                 myProfile
                   ? profilePicture
@@ -223,7 +228,13 @@ function ProfilePage() {
                   ? fProfilePicture
                   : undefined
               }
-              sx={{ width: 100, height: 100 }}
+              level={myProfile ? level : fLevel}
+              expPercentage={
+                myProfile
+                  ? EXPpercentage(level, EXP)
+                  : EXPpercentage(fLevel, fEXP)
+              }
+              size="big"
             />
             {isEditMode && (
               <>

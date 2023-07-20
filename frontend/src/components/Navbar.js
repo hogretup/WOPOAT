@@ -105,6 +105,7 @@ function NavBar() {
               avatarSrc={profilePicture ? profilePicture : undefined}
               expPercentage={EXPpercentage(level, EXP)}
               level={level}
+              size="small"
             />
           </IconButton>
           <Menu
