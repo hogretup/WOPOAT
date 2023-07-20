@@ -7,6 +7,7 @@ import {
   Container,
   Box,
   Link,
+  Paper,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { deepOrange } from "@mui/material/colors";
@@ -59,7 +60,7 @@ function LoginPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="xs">
+      <Container maxWidth="sm">
         <Box
           sx={{
             display: "flex",
@@ -69,59 +70,68 @@ function LoginPage() {
             minHeight: "100vh",
           }}
         >
-          <Typography variant="h4" component="h1" gutterBottom>
-            QUIZZICALC
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleLogin}
-            sx={{ mt: 3, width: "100%" }}
-          >
-            <TextField
-              fullWidth
-              id="username"
-              label="Username"
-              value={username}
-              onChange={handleUsernameChange}
-              color="primary"
-              required
-            />
-
-            <TextField
-              fullWidth
-              id="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              color="primary"
-              required
-              sx={{ mt: 2 }}
-            />
-
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mt: 3, mb: 2 }}
+          <Paper elevation={3}>
+            <Box
+              padding={4}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
             >
-              Sign In
-            </Button>
-          </Box>
+              <Typography variant="h4" component="h1" gutterBottom>
+                QUIZZICALC
+              </Typography>
+              <Box
+                component="form"
+                onSubmit={handleLogin}
+                sx={{ mt: 3, width: "100%" }}
+              >
+                <TextField
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  color="primary"
+                  required
+                />
 
-          {errorMessage && (
-            <Typography color="error" align="center">
-              {errorMessage}
-            </Typography>
-          )}
+                <TextField
+                  fullWidth
+                  id="password"
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  color="primary"
+                  required
+                  sx={{ mt: 2 }}
+                />
 
-          <Typography variant="body2" sx={{ mt: 3 }}>
-            Don't have an account?{" "}
-            <Link onClick={goToSignupPage} color="primary">
-              Click here to sign up
-            </Link>
-          </Typography>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+              </Box>
+
+              {errorMessage && (
+                <Typography color="error" align="center">
+                  {errorMessage}
+                </Typography>
+              )}
+
+              <Typography variant="body2" sx={{ mt: 3 }}>
+                Don't have an account?{" "}
+                <Link onClick={goToSignupPage} color="primary">
+                  Click here to sign up
+                </Link>
+              </Typography>
+            </Box>
+          </Paper>
         </Box>
       </Container>
     </ThemeProvider>
