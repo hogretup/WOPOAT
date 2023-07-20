@@ -219,15 +219,7 @@ function ProfilePage() {
         <form>
           <Stack sx={{ marginTop: "20px" }} spacing={2} alignItems="center">
             <AvatarEXP
-              src={
-                myProfile
-                  ? profilePicture
-                    ? profilePicture
-                    : undefined
-                  : fProfilePicture
-                  ? fProfilePicture
-                  : undefined
-              }
+              avatarSrc={myProfile ? profilePicture : fProfilePicture}
               level={myProfile ? level : fLevel}
               expPercentage={
                 myProfile
