@@ -206,7 +206,7 @@ function ProfilePage() {
   }
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm">
       <Box
         sx={{
           display: "flex",
@@ -288,7 +288,7 @@ function ProfilePage() {
               ))}
             <Stack
               direction="row"
-              spacing={2}
+              spacing={8}
               sx={{
                 marginTop: "10px",
               }}

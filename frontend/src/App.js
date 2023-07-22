@@ -13,8 +13,12 @@ import SignUpPage from "./pages/SignupPage";
 import AboutPage from "./pages/AboutPage";
 import FriendsPage from "./pages/FriendsPage";
 import ProfilePage from "./pages/ProfilePage";
+
 // Components
 import Navbar from "./components/Navbar";
+
+// CSS
+import "./App.css";
 
 function App() {
   return (
