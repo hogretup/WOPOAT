@@ -1,6 +1,6 @@
 # Django + React project
 
-Quizzicalc aims to create a convenient way for students & tutors to make quizzes for simple algebraic problems, while making it engaging for the students using symbolic computational libraries.
+Quizzicalc aims to create a convenient way for students & tutors to make quizzes for simple algebraic problems, while making it engaging for the students using symbolic computation libraries.
 
 ## Walkthrough of set up
 
