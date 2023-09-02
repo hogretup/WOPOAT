@@ -55,7 +55,7 @@ where the internal nodes can be any binary operator (e.g. $+,\times$), and the l
 
 In order to make the quizzes reproducible, while storing them in the database would be perfectly viable, we wanted to try serializing each quiz into a unique "seed" for others to use. 
 
-For every complete expression tree, given its preorder traversal (like $[x,+,a,1,+,b,2]$ for the tree above), we can reconstruct the unique tree since we know exactly where the internal nodes and leaves must be. Thus we need only serialize the preorder traversal arrays.
+For every expression tree, given its preorder traversal (like $[x,+,a,1,+,b,2]$ for the tree above), we can reconstruct the unique tree since we know exactly where the internal nodes and leaves must be (since they are complete). Thus we need only serialize the preorder traversal arrays.
 
 Each internal node can only either be $\{+,\times\}$ so they require 1 bit. For a 2-variable expression, the leaves can take any value from $[-9,9]$ or $\{a,b\}$ (arbitrary variables), so they require 5 bits.
 
